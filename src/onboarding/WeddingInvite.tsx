@@ -10,10 +10,6 @@ interface WeddingInviteProps {
   onComplete?: () => void;
 }
 
-
-
-
-
 const WeddingInvite: FC<WeddingInviteProps> = ({
   groom = chuRe.ten,
   bride = coDau.ten,
@@ -69,16 +65,13 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
           aria-pressed={open}
           onClick={handleToggle}
         >
-
           <span className="envelope-back" />
           <img
             className={"envelope-image"}
             src="/start_image_background.jpg"
             alt=""
           />
-          <span className="envelope-side-fold 
-           envelope-side-fold-left
-          " />
+          <span className="envelope-side-fold envelope-side-fold-left" />
           <span className="envelope-side-fold envelope-side-fold-right" />
           <span className="envelope-bottom-fold" />
           <svg
