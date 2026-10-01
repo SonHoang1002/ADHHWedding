@@ -20,7 +20,6 @@
   pointer-events: none;
 }
 
-/* --- ĐÚNG ANIMATION TRÁI TIM BAN ĐẦU --- */
 .falling-heart {
   position: absolute;
   top: -8%;
@@ -66,6 +65,7 @@
   font-style: italic;
   margin-bottom: 18px;
 }
+
 .envelope {
   position: relative;
   display: block;
@@ -76,30 +76,67 @@
   perspective: 800px;
   transition: transform 180ms ease;
   margin: 0 auto;
-  /* Giữ nguyên overflow: visible (mặc định) để nắp thiệp mở ra không bị cắt */
-  overflow: visible; 
+  overflow: visible;
 }
 
 .envelope-image {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: auto; /* Giữ ratio mặc định của ảnh gốc (ảnh dọc) */
+  width: 100%; /* Full width thiệp */
+  height: auto; /* Height tính theo ratio ảnh gốc */
   opacity: 1;
   pointer-events: none;
   z-index: 1;
 
+  transform: translateY(0);
+
   /* 
-   * Cắt phần chân ảnh bị chèn ra khỏi khung phong bì mà KHÔNG làm ảnh hưởng đến nắp thiệp
-   * Giới hạn vùng hiển thị đúng bằng chiều cao khung phong bì
+   * clip-path: inset(top right bottom left)
+   * Top = 0: Giới hạn đúng mép trên thân thiệp
+   * Bottom = calc(100% - height_thieps): Giới hạn đúng đáy thân thiệp
    */
   clip-path: inset(0 0 calc(100% - (min(78vw, 390px) / 1.72)) 0);
+
+  transition: 
+    transform 600ms cubic-bezier(0.25, 1, 0.5, 1),
+    clip-path 600ms cubic-bezier(0.25, 1, 0.5, 1),
+    top 800ms cubic-bezier(0.16, 1, 0.3, 1),
+    left 800ms cubic-bezier(0.16, 1, 0.3, 1),
+    width 800ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 800ms ease,
+    border-radius 800ms ease;
 }
 
-.envelope-image.is-open {
-  opacity: 1;
-  transform: scale(1);
+/* --- BƯỚC 1: Trượt lên 200px (Chỉ mở clip phía top, đáy vẫn bị cắt kín) --- */
+.envelope-image.is-up200 {
+  transform: translateY(-200px);
+  z-index: 10;
+
+  /*
+   * Top = -200px: Đỉnh ảnh trượt vượt qua mép trên thân thiệp đến đâu lộ ra đến đó
+   * Bottom = +200px (bù trừ translateY): Đáy ảnh vẫn giữ nguyên vị trí cắt cố định tại đáy thiệp
+   */
+  clip-path: inset(-200px 0 calc(100% - (min(78vw, 390px) / 1.72) + 200px) 0);
+}
+
+/* --- BƯỚC 2: Di chuyển ra giữa màn hình, xả clip-path & Scale Up --- */
+.envelope-image.is-scale-center {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  
+  transform: translate(-50%, -50%) scale(1);
+  z-index: 60;
+
+  width: min(85vw, 500px);
+  max-height: 80vh;
+
+  /* Xả hoàn toàn clip-path để hiển thị trọn vẹn 100% ảnh */
+  clip-path: inset(0 0 0 0);
+  
+  border-radius: 12px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
 }
 
 .envelope:hover {
@@ -273,49 +310,6 @@
 .invite-word,
 .invite-details {
   transition: opacity 300ms ease;
-}
-
-/* ============================================================
-   ANIMATION PHÓNG TO ẢNH: GIỮ RATIO CHUẨN & NẰM Ở GIỮA
-   ============================================================ */
-.burst-image {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  
-  /* Bắt đầu thu nhỏ ở tâm phong bì */
-  width: min(60vw, 250px);
-  height: auto; /* Để chiều cao tự nhảy theo tỉ lệ gốc của ảnh */
-  
-  transform: translate(-50%, -50%) scale(0.3);
-  border-radius: 8px;
-  object-fit: contain; /* Đảm bảo không bị méo hay móm hình */
-  opacity: 0;
-  z-index: 7;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-  
-  transition: 
-    width 800ms cubic-bezier(0.16, 1, 0.3, 1),
-    max-height 800ms cubic-bezier(0.16, 1, 0.3, 1),
-    transform 800ms cubic-bezier(0.16, 1, 0.3, 1),
-    border-radius 800ms ease,
-    opacity 300ms ease;
-  pointer-events: none;
-}
-
-/* Khi bay ra giữa màn hình */
-.burst-image.is-flying {
-  /* Giới hạn chiều rộng tối đa 500px */
-  width: min(85vw, 500px);
-  /* Giới hạn thêm chiều cao không vượt quá 80% màn hình để không bị tràn viền dọc */
-  max-height: 80vh; 
-  height: auto; /* Giữ nguyên ratio chuẩn của ảnh dọc/ngang */
-  
-  transform: translate(-50%, -50%) scale(1);
-  border-radius: 12px;
-  opacity: 1;
-  z-index: 60;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65);
 }
 
 .date {

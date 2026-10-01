@@ -17,7 +17,7 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
   onComplete = () => { },
 }): ReactElement => {
   const [open, setOpen] = useState<boolean>(false);
-  const [flying, setFlying] = useState<boolean>(false);
+  const [stage, setStage] = useState<"idle" | "up200" | "scaleCenter">("idle");
   const timers = useRef<NodeJS.Timeout[]>([]);
 
   useEffect(() => {
@@ -30,22 +30,26 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
     setOpen((currentlyOpen: boolean) => {
       const next = !currentlyOpen;
       if (next) {
-        // Flap animation: 650ms
-        // Burst delay: 900ms (wait for flap to fully open)
-        const burstTimer = setTimeout(() => {
-          setFlying(true);
-          // Optional callback when burst starts
-          if (onComplete) {
-            const callbackTimer = setTimeout(onComplete, 800); // 800ms = burst animation time
-            timers.current.push(callbackTimer);
-          }
-        }, 900);
-        timers.current.push(burstTimer);
+        // Giai đoạn 1: Chờ nắp mở (650ms) -> Ảnh bay dọc lên trên 200px
+        const timer1 = setTimeout(() => {
+          setStage("up200");
+
+          // Giai đoạn 2: Nhô lên xong (sau 600ms) -> Chuyển sang scale up từ giữa màn hình
+          const timer2 = setTimeout(() => {
+            setStage("scaleCenter");
+            if (onComplete) {
+              const callbackTimer = setTimeout(onComplete, 800);
+              timers.current.push(callbackTimer);
+            }
+          }, 600);
+          timers.current.push(timer2);
+
+        }, 650);
+        timers.current.push(timer1);
       } else {
-        // Reset when closing
         timers.current.forEach(clearTimeout);
         timers.current = [];
-        setFlying(false);
+        setStage("idle");
       }
       return next;
     });
@@ -66,11 +70,14 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
           onClick={handleToggle}
         >
           <span className="envelope-back" />
+
+          {/* CHỈ DÙNG 1 ẢNH DUY NHẤT */}
           <img
-            className={"envelope-image"}
+            className={`envelope-image ${stage === "up200" ? "is-up200" : ""} ${stage === "scaleCenter" ? "is-scale-center" : ""}`}
             src="/start_image_background.jpg"
             alt=""
           />
+
           <span className="envelope-side-fold envelope-side-fold-left" />
           <span className="envelope-side-fold envelope-side-fold-right" />
           <span className="envelope-bottom-fold" />
@@ -104,13 +111,6 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
           <div className="date">{date}</div>
         </div>
       </div>
-
-      <img
-        className={`burst-image${flying ? " is-flying" : ""}`}
-        src="/start_image_background.jpg"
-        alt=""
-        aria-hidden="true"
-      />
     </div>
   );
 };
