@@ -1,19 +1,47 @@
 @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cinzel:wght@500;700&display=swap');
 
-.wedding-invite {
-  min-height: 100vh;
-  width: 100vw;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
+html,
+body {
+  margin: 0;
+  padding: 0;
   overflow: hidden;
-  font-family: Georgia, "Times New Roman", serif;
-  background: linear-gradient(to right bottom, rgb(110, 26, 32), rgb(81, 20, 25), rgb(56, 10, 14));
-  padding: 40px 16px;
-  box-sizing: border-box;
+  background-color: #380a0e;
 }
 
+.wedding-app-root {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(to right bottom, rgb(110, 26, 32), rgb(81, 20, 25), rgb(56, 10, 14));
+}
+
+/* ============================================================
+   CONTAINER CUỘN SIÊU MƯỢT (SMOOTH & SEAMLESS SCROLL)
+   ============================================================ */
+.main-scroll-sections {
+  width: 100vw;
+  height: 100vh;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
+  -webkit-overflow-scrolling: touch;
+  /* Giúp trượt êm ái trên iOS Safari */
+  overscroll-behavior-y: contain;
+  /* Ngăn chặn hiệu ứng giật lùi trang */
+}
+
+/* Ẩn thanh cuộn để tăng tính thẩm mỹ */
+.main-scroll-sections::-webkit-scrollbar {
+  display: none;
+}
+
+.main-scroll-sections {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* BACKGROUND TRÁI TIM BAY */
 .background-hearts-layer {
   position: absolute;
   inset: 0;
@@ -25,23 +53,36 @@
 .falling-heart {
   position: absolute;
   top: -8%;
-  animation: fall var(--fall-duration) linear var(--fall-delay) infinite;
+  color: rgba(255, 230, 230, 0.25);
+  font-size: 18px;
+  animation: fall linear infinite;
+  will-change: transform, opacity;
 }
 
 @keyframes fall {
   0% {
-    transform: translate(0, 0) rotate(0deg);
-    opacity: 0.9;
-  }
-
-  60% {
-    opacity: 0.5;
+    transform: translate3d(0, 0, 0) rotate(0deg);
+    opacity: 0.8;
   }
 
   100% {
-    transform: translate(var(--drift), 115vh) rotate(25deg);
+    transform: translate3d(40px, 110vh, 0) rotate(45deg);
     opacity: 0;
   }
+}
+
+/* ============================================================
+   PHẦN THIỆP MỜI BAN ĐẦU
+   ============================================================ */
+.envelope-initial-screen {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 16px;
+  font-family: Georgia, "Times New Roman", serif;
 }
 
 .invite-content {
@@ -50,8 +91,12 @@
   width: min(92vw, 500px);
   padding: 16px 20px 24px;
   text-align: center;
-  animation: rise 1s ease forwards 0.2s;
+  transition: opacity 500ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.invite-content.is-opening {
   opacity: 0;
+  pointer-events: none;
 }
 
 .invite-heading {
@@ -76,17 +121,12 @@
   background: transparent;
   cursor: pointer;
   perspective: 800px;
-  transition: transform 180ms ease;
+  transition: transform 200ms ease;
   margin: 0 auto;
 }
 
 .envelope:hover {
   transform: translateY(-2px);
-}
-
-.envelope:focus-visible {
-  outline: 2px solid #e9dfc8;
-  outline-offset: 6px;
 }
 
 .envelope-back,
@@ -160,7 +200,7 @@
   z-index: 4;
   pointer-events: none;
   transform-origin: 50% 0;
-  transition: transform 650ms cubic-bezier(0.2, 0.75, 0.25, 1);
+  transition: transform 600ms cubic-bezier(0.2, 0.75, 0.25, 1);
 }
 
 .envelope.is-open .envelope-flap-line {
@@ -170,7 +210,7 @@
 .envelope-flap {
   z-index: 4;
   transform-origin: 50% 0;
-  transition: transform 650ms cubic-bezier(0.2, 0.75, 0.25, 1);
+  transition: transform 600ms cubic-bezier(0.2, 0.75, 0.25, 1);
 }
 
 .envelope-flap-shadow {
@@ -224,8 +264,6 @@
   font-size: clamp(22px, 6vw, 30px);
   color: #f4efe6;
   line-height: 1.2;
-  letter-spacing: 0.3px;
-  white-space: nowrap;
 }
 
 .amp {
@@ -239,66 +277,56 @@
   margin-top: 22px;
 }
 
-.invite-content.is-open .invite-heading,
-.invite-content.is-open .invite-word,
-.invite-content.is-open .invite-details {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 500ms ease;
-}
-
-.invite-heading,
-.invite-word,
-.invite-details {
-  transition: opacity 300ms ease;
-}
-
 .date {
   font-size: 16px;
   color: #e9dfc8;
   letter-spacing: 0.5px;
-  margin-bottom: 8px;
 }
 
 /* ============================================================
-   1. ẢNH SCALE TỪ GIỮA MÀN HÌNH
+   SECTION 1: ẢNH CƯỚI & NỘI DUNG CHÍNH
    ============================================================ */
+.section-photo-hero {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  /* Dynamic viewport height cho trình duyệt di động */
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .center-burst-image {
-  position: fixed;
+  position: absolute;
   top: 50%;
   left: 50%;
   width: min(85vw, 500px);
   max-height: 80vh;
   height: auto;
-
-  transform: translate(-50%, -50%) scale(0.2);
+  transform: translate3d(-50%, -50%, 0) scale(0.2);
   opacity: 0;
-  z-index: 60;
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   pointer-events: none;
-
-  transition:
-    transform 800ms cubic-bezier(0.16, 1, 0.3, 1),
-    opacity 400ms ease,
-    box-shadow 800ms ease;
+  transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1), opacity 400ms ease;
+  will-change: transform, opacity;
 }
 
 .center-burst-image.is-visible {
-  transform: translate(-50%, -50%) scale(1);
+  transform: translate3d(-50%, -50%, 0) scale(1);
   opacity: 1;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
 }
 
-/* ============================================================
-   CỤM TEXT ANIMATION VỊ TRÍ TRUNG TÂM (HIỂN THỊ SIÊU TỐC <= 500ms)
-   ============================================================ */
 .center-text-overlay {
-  position: fixed;
+  position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 70;
+  transform: translate3d(-50%, -50%, 0);
+  z-index: 20;
   text-align: center;
   width: min(90vw, 600px);
   pointer-events: none;
@@ -310,16 +338,15 @@
   text-shadow: 0 4px 15px rgba(0, 0, 0, 0.8), 0 1px 3px rgba(0, 0, 0, 0.9);
 }
 
-/* 1. Tên Chú Rể & Cô Dâu (Chạy ngay 0ms - Kéo dài 250ms) */
 .overlay-names {
   font-family: 'Great Vibes', cursive;
-  font-size: clamp(38px, 9vw, 48px);
+  font-size: clamp(38px, 9vw, 64px);
   color: #fff8eb;
   white-space: nowrap;
   line-height: 1.2;
   opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 250ms ease, transform 250ms cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translate3d(0, 14px, 0);
+  transition: opacity 300ms ease, transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .overlay-amp {
@@ -329,7 +356,6 @@
   margin: 0 6px;
 }
 
-/* 2. Divider (Delay 100ms - Kéo dài 250ms) */
 .overlay-divider {
   width: 0;
   height: 1px;
@@ -337,39 +363,73 @@
   margin: 2px 0 4px;
   opacity: 0;
   box-shadow: 0 0 8px rgba(217, 196, 138, 0.6);
-  transition: width 250ms cubic-bezier(0.16, 1, 0.3, 1) 100ms, opacity 200ms ease 100ms;
+  transition: width 300ms cubic-bezier(0.16, 1, 0.3, 1) 100ms, opacity 250ms ease 100ms;
 }
 
-/* 3. Ngày tổ chức (Delay 180ms - Kéo dài 250ms) */
 .overlay-date {
   font-family: 'Cinzel', serif;
-  font-size: clamp(16px, 4vw, 26px);
+  font-size: clamp(16px, 4vw, 24px);
   color: #fdf2d1;
   letter-spacing: 3px;
   font-weight: 700;
   opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 250ms ease 180ms, transform 250ms cubic-bezier(0.16, 1, 0.3, 1) 180ms;
+  transform: translate3d(0, 14px, 0);
+  transition: opacity 300ms ease 180ms, transform 300ms cubic-bezier(0.16, 1, 0.3, 1) 180ms;
 }
 
-/* 4. Địa điểm (Delay 250ms - Kéo dài 250ms -> Hoàn thành ở mốc 500ms) */
 .overlay-location {
   font-family: Georgia, serif;
-  font-size: clamp(14px, 3.5vw, 20px);
+  font-size: clamp(14px, 3.5vw, 18px);
   color: #e2d3be;
   letter-spacing: 2px;
   font-style: italic;
   opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 250ms ease 250ms, transform 250ms cubic-bezier(0.16, 1, 0.3, 1) 250ms;
+  transform: translate3d(0, 14px, 0);
+  transition: opacity 300ms ease 250ms, transform 300ms cubic-bezier(0.16, 1, 0.3, 1) 250ms;
 }
 
-/* --- KÍCH HOẠT ANIMATION --- */
+.scroll-down-hint {
+  background: none;
+  border: none;
+  color: #fdf2d1;
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  margin-top: 18px;
+  cursor: pointer;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 350ms ease 350ms;
+}
+
+.arrow-down-icon {
+  width: 20px;
+  height: 20px;
+  animation: bounce 1.6s infinite ease-in-out;
+}
+
+@keyframes bounce {
+
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, 6px, 0);
+  }
+}
+
 .center-text-overlay.is-visible .overlay-names,
 .center-text-overlay.is-visible .overlay-date,
-.center-text-overlay.is-visible .overlay-location {
+.center-text-overlay.is-visible .overlay-location,
+.center-text-overlay.is-visible .scroll-down-hint {
   opacity: 1;
-  transform: translateY(0);
+  transform: translate3d(0, 0, 0);
 }
 
 .center-text-overlay.is-visible .overlay-divider {
@@ -377,11 +437,179 @@
   width: min(60vw, 220px);
 }
 
-@keyframes rise {
+/* ============================================================
+   SECTION 2: BẢNG LỊCH THÁNG 12 / 2026
+   ============================================================ */
+.section-calendar {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  box-sizing: border-box;
+  background: radial-gradient(circle at center, rgb(95, 22, 28) 0%, rgb(48, 8, 12) 100%);
+}
+
+.calendar-card {
+  width: min(90vw, 420px);
+  background: rgba(255, 250, 243, 0.06);
+  border: 1px solid rgba(217, 196, 138, 0.35);
+  border-radius: 16px;
+  padding: 24px 20px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+  color: #f4efe6;
+  text-align: center;
+  opacity: 0;
+  transform: translate3d(0, 30px, 0) scale(0.97);
+  transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+.section-calendar.is-animated .calendar-card {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.calendar-subtitle {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: #d9c48a;
+  margin-bottom: 4px;
+}
+
+.calendar-title {
+  font-family: 'Cinzel', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff8eb;
+  margin: 0 0 12px;
+  letter-spacing: 2px;
+}
+
+.calendar-gold-line {
+  width: 60px;
+  height: 2px;
+  background: #d9c48a;
+  margin: 0 auto 20px;
+  border-radius: 2px;
+}
+
+.calendar-grid-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(217, 196, 138, 0.15);
+  padding-bottom: 8px;
+}
+
+.day-name {
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #d9c48a;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px 2px;
+}
+
+.calendar-cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Georgia, serif;
+  font-size: 14px;
+  color: #e2d3be;
+  opacity: 0;
+  transform: scale(0.85);
+}
+
+.section-calendar.is-animated .calendar-cell {
+  animation: cellPop 350ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes cellPop {
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: scale(1);
   }
+}
+
+.day-number {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+}
+
+.calendar-cell.wedding-day .day-number {
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.heart-highlight {
+  position: absolute;
+  inset: -6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.heart-svg {
+  width: 100%;
+  height: 100%;
+  fill: rgba(217, 196, 138, 0.25);
+  stroke: #ffd700;
+  stroke-width: 2;
+  filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.8));
+  animation: heartPulse 1.8s infinite ease-in-out;
+}
+
+@keyframes heartPulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+.calendar-footer {
+  margin-top: 22px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(217, 196, 138, 0.15);
+}
+
+.wedding-countdown-tag span {
+  font-family: 'Great Vibes', cursive;
+  font-size: 26px;
+  color: #fff8eb;
+  display: block;
+}
+
+.wedding-countdown-tag p {
+  font-size: 12px;
+  color: #d9c48a;
+  margin: 4px 0 0;
+  font-style: italic;
+  letter-spacing: 0.5px;
 }
 
 @media (min-width: 500px) {
