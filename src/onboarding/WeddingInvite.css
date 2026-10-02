@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cinzel:wght@500;700&display=swap');
+
 .wedding-invite {
   min-height: 100vh;
   width: 100vw;
@@ -76,67 +78,6 @@
   perspective: 800px;
   transition: transform 180ms ease;
   margin: 0 auto;
-  overflow: visible;
-}
-
-.envelope-image {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%; /* Full width thiệp */
-  height: auto; /* Height tính theo ratio ảnh gốc */
-  opacity: 1;
-  pointer-events: none;
-  z-index: 1;
-
-  transform: translateY(0);
-
-  /* 
-   * clip-path: inset(top right bottom left)
-   * Top = 0: Giới hạn đúng mép trên thân thiệp
-   * Bottom = calc(100% - height_thieps): Giới hạn đúng đáy thân thiệp
-   */
-  clip-path: inset(0 0 calc(100% - (min(78vw, 390px) / 1.72)) 0);
-
-  transition: 
-    transform 600ms cubic-bezier(0.25, 1, 0.5, 1),
-    clip-path 600ms cubic-bezier(0.25, 1, 0.5, 1),
-    top 800ms cubic-bezier(0.16, 1, 0.3, 1),
-    left 800ms cubic-bezier(0.16, 1, 0.3, 1),
-    width 800ms cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 800ms ease,
-    border-radius 800ms ease;
-}
-
-/* --- BƯỚC 1: Trượt lên 200px (Chỉ mở clip phía top, đáy vẫn bị cắt kín) --- */
-.envelope-image.is-up200 {
-  transform: translateY(-200px);
-  z-index: 10;
-
-  /*
-   * Top = -200px: Đỉnh ảnh trượt vượt qua mép trên thân thiệp đến đâu lộ ra đến đó
-   * Bottom = +200px (bù trừ translateY): Đáy ảnh vẫn giữ nguyên vị trí cắt cố định tại đáy thiệp
-   */
-  clip-path: inset(-200px 0 calc(100% - (min(78vw, 390px) / 1.72) + 200px) 0);
-}
-
-/* --- BƯỚC 2: Di chuyển ra giữa màn hình, xả clip-path & Scale Up --- */
-.envelope-image.is-scale-center {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  
-  transform: translate(-50%, -50%) scale(1);
-  z-index: 60;
-
-  width: min(85vw, 500px);
-  max-height: 80vh;
-
-  /* Xả hoàn toàn clip-path để hiển thị trọn vẹn 100% ảnh */
-  clip-path: inset(0 0 0 0);
-  
-  border-radius: 12px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
 }
 
 .envelope:hover {
@@ -158,7 +99,7 @@
 }
 
 .envelope-back {
-  border: 1.5px solid transparent;  
+  border: 1.5px solid transparent;
 }
 
 .envelope-side-fold-left,
@@ -221,7 +162,7 @@
   transform-origin: 50% 0;
   transition: transform 650ms cubic-bezier(0.2, 0.75, 0.25, 1);
 }
- 
+
 .envelope.is-open .envelope-flap-line {
   transform: rotateX(180deg);
 }
@@ -317,6 +258,123 @@
   color: #e9dfc8;
   letter-spacing: 0.5px;
   margin-bottom: 8px;
+}
+
+/* ============================================================
+   1. ẢNH SCALE TỪ GIỮA MÀN HÌNH
+   ============================================================ */
+.center-burst-image {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: min(85vw, 500px);
+  max-height: 80vh;
+  height: auto;
+
+  transform: translate(-50%, -50%) scale(0.2);
+  opacity: 0;
+  z-index: 60;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+
+  transition:
+    transform 800ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 400ms ease,
+    box-shadow 800ms ease;
+}
+
+.center-burst-image.is-visible {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+}
+
+/* ============================================================
+   CỤM TEXT ANIMATION VỊ TRÍ TRUNG TÂM (HIỂN THỊ SIÊU TỐC <= 500ms)
+   ============================================================ */
+.center-text-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 70;
+  text-align: center;
+  width: min(90vw, 600px);
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.8), 0 1px 3px rgba(0, 0, 0, 0.9);
+}
+
+/* 1. Tên Chú Rể & Cô Dâu (Chạy ngay 0ms - Kéo dài 250ms) */
+.overlay-names {
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(38px, 9vw, 48px);
+  color: #fff8eb;
+  white-space: nowrap;
+  line-height: 1.2;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 250ms ease, transform 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.overlay-amp {
+  font-family: Georgia, serif;
+  font-size: 0.75em;
+  color: #f3d69b;
+  margin: 0 6px;
+}
+
+/* 2. Divider (Delay 100ms - Kéo dài 250ms) */
+.overlay-divider {
+  width: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #d9c48a, #fff8eb, #d9c48a, transparent);
+  margin: 2px 0 4px;
+  opacity: 0;
+  box-shadow: 0 0 8px rgba(217, 196, 138, 0.6);
+  transition: width 250ms cubic-bezier(0.16, 1, 0.3, 1) 100ms, opacity 200ms ease 100ms;
+}
+
+/* 3. Ngày tổ chức (Delay 180ms - Kéo dài 250ms) */
+.overlay-date {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(16px, 4vw, 26px);
+  color: #fdf2d1;
+  letter-spacing: 3px;
+  font-weight: 700;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 250ms ease 180ms, transform 250ms cubic-bezier(0.16, 1, 0.3, 1) 180ms;
+}
+
+/* 4. Địa điểm (Delay 250ms - Kéo dài 250ms -> Hoàn thành ở mốc 500ms) */
+.overlay-location {
+  font-family: Georgia, serif;
+  font-size: clamp(14px, 3.5vw, 20px);
+  color: #e2d3be;
+  letter-spacing: 2px;
+  font-style: italic;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 250ms ease 250ms, transform 250ms cubic-bezier(0.16, 1, 0.3, 1) 250ms;
+}
+
+/* --- KÍCH HOẠT ANIMATION --- */
+.center-text-overlay.is-visible .overlay-names,
+.center-text-overlay.is-visible .overlay-date,
+.center-text-overlay.is-visible .overlay-location {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.center-text-overlay.is-visible .overlay-divider {
+  opacity: 1;
+  width: min(60vw, 220px);
 }
 
 @keyframes rise {

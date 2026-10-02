@@ -1,23 +1,25 @@
 import { useEffect, useRef, useState, FC, ReactElement } from "react";
 import "./WeddingInvite.css";
 import BackgroundHeartsLayer from "./BackgroundHeartLayer";
-import { chuRe, coDau, ngayChinhThuc } from "../Constant";
 
 interface WeddingInviteProps {
   groom?: string;
   bride?: string;
   date?: string;
+  location?: string;
   onComplete?: () => void;
 }
 
 const WeddingInvite: FC<WeddingInviteProps> = ({
-  groom = chuRe.ten,
-  bride = coDau.ten,
-  date = ngayChinhThuc,
+  groom = "Huy Hiếu",
+  bride = "Ánh Dương",
+  date = "12.12.2026",
+  location = "Vĩnh Yên, Phú Thọ",
   onComplete = () => { },
 }): ReactElement => {
   const [open, setOpen] = useState<boolean>(false);
-  const [stage, setStage] = useState<"idle" | "up200" | "scaleCenter">("idle");
+  const [showImage, setShowImage] = useState<boolean>(false);
+  const [showText, setShowText] = useState<boolean>(false);
   const timers = useRef<NodeJS.Timeout[]>([]);
 
   useEffect(() => {
@@ -30,26 +32,27 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
     setOpen((currentlyOpen: boolean) => {
       const next = !currentlyOpen;
       if (next) {
-        // Giai đoạn 1: Chờ nắp mở (650ms) -> Ảnh bay dọc lên trên 200px
-        const timer1 = setTimeout(() => {
-          setStage("up200");
+        // 1. Đợi nắp thiệp mở xong (650ms) -> Hiện ảnh scale ra từ giữa
+        const imgTimer = setTimeout(() => {
+          setShowImage(true);
 
-          // Giai đoạn 2: Nhô lên xong (sau 600ms) -> Chuyển sang scale up từ giữa màn hình
-          const timer2 = setTimeout(() => {
-            setStage("scaleCenter");
+          // 2. Đợi ảnh scale xong (700ms) -> Bắt đầu animation Text
+          const textTimer = setTimeout(() => {
+            setShowText(true);
             if (onComplete) {
-              const callbackTimer = setTimeout(onComplete, 800);
+              const callbackTimer = setTimeout(onComplete, 1200);
               timers.current.push(callbackTimer);
             }
-          }, 600);
-          timers.current.push(timer2);
+          }, 700);
+          timers.current.push(textTimer);
 
         }, 650);
-        timers.current.push(timer1);
+        timers.current.push(imgTimer);
       } else {
         timers.current.forEach(clearTimeout);
         timers.current = [];
-        setStage("idle");
+        setShowImage(false);
+        setShowText(false);
       }
       return next;
     });
@@ -70,14 +73,6 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
           onClick={handleToggle}
         >
           <span className="envelope-back" />
-
-          {/* CHỈ DÙNG 1 ẢNH DUY NHẤT */}
-          <img
-            className={`envelope-image ${stage === "up200" ? "is-up200" : ""} ${stage === "scaleCenter" ? "is-scale-center" : ""}`}
-            src="/start_image_background.jpg"
-            alt=""
-          />
-
           <span className="envelope-side-fold envelope-side-fold-left" />
           <span className="envelope-side-fold envelope-side-fold-right" />
           <span className="envelope-bottom-fold" />
@@ -107,9 +102,26 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
               <div className="name-piece">{bride}</div>
             </div>
           </div>
-
           <div className="date">{date}</div>
         </div>
+      </div>
+
+      {/* ẢNH SCALE TỪ GIỮA MÀN HÌNH */}
+      <img
+        className={`center-burst-image${showImage ? " is-visible" : ""}`}
+        src="/start_image_background.jpg"
+        alt=""
+        aria-hidden="true"
+      />
+
+      {/* CỤM TEXT ANIMATION TẠI VỊ TRÍ GIỮA MÀN HÌNH (50%, 50%) */}
+      <div className={`center-text-overlay${showText ? " is-visible" : ""}`}>
+        <div className="overlay-names">
+          {groom} <span className="overlay-amp">&amp;</span> {bride}
+        </div>
+        <div className="overlay-divider" />
+        <div className="overlay-date">{date}</div>
+        <div className="overlay-location">{location}</div>
       </div>
     </div>
   );
