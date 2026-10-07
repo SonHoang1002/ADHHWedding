@@ -1,0 +1,401 @@
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cinzel:wght@500;600;700&display=swap');
+
+/* ============================================================
+   NỀN FULL MÀN HÌNH – CHỈ NỘI DUNG CHÍNH GIỚI HẠN THEO PHONE
+   ============================================================ */
+.iv-root {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  background: #2a0b0e;
+  font-family: 'Cinzel', Georgia, serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.iv-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.iv-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.iv-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(20, 4, 6, 0.82) 0%,
+    rgba(46, 8, 13, 0.7) 45%,
+    rgba(18, 3, 5, 0.9) 100%
+  );
+}
+
+/* Khung nội dung theo kích cỡ điện thoại */
+.iv-frame {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 430px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ============================================================
+   NÚM QUAY LẠI
+   ============================================================ */
+.iv-back {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 40;
+  border: 1px solid rgba(230, 205, 146, 0.5);
+  background: rgba(20, 5, 8, 0.55);
+  color: #e6cd92;
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 300ms ease, transform 300ms ease;
+}
+
+.iv-back:active {
+  transform: scale(0.96);
+  background: rgba(20, 5, 8, 0.85);
+}
+
+/* ============================================================
+   LỚP MỞ THIỆP (COVER) – TOÀN BỘ KHUNG, BẤM ĐỂ MỞ
+   ============================================================ */
+.iv-cover {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  text-align: center;
+  padding: 32px 24px;
+  cursor: pointer;
+  border: 0;
+  width: 100%;
+  background: transparent;
+  color: #f6ead0;
+  transition: opacity 500ms ease, transform 500ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    visibility 0s linear 500ms;
+}
+
+.iv-root.is-open .iv-cover {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.iv-cover-title {
+  font-size: clamp(13px, 3.6vw, 15px);
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: #e6cd92;
+  margin: 0;
+}
+
+.iv-cover-names {
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(40px, 13vw, 58px);
+  line-height: 1.15;
+  margin: 0;
+  color: #fdf6e6;
+}
+
+.iv-cover-date {
+  font-size: clamp(18px, 5.6vw, 24px);
+  letter-spacing: 0.2em;
+  color: #e6cd92;
+  margin: 0;
+}
+
+.iv-cover-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: clamp(11px, 3.2vw, 13px);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(246, 234, 208, 0.85);
+  border: 1px solid rgba(230, 205, 146, 0.45);
+  border-radius: 999px;
+  padding: 11px 22px;
+  margin-top: 6px;
+  animation: iv-pulse 500ms ease-in-out infinite alternate;
+}
+
+@keyframes iv-pulse {
+  from {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(230, 205, 146, 0.35);
+  }
+  to {
+    transform: scale(1.04);
+    box-shadow: 0 0 0 10px rgba(230, 205, 146, 0);
+  }
+}
+
+/* ============================================================
+   NỘI DUNG CHÍNH (cuộn được trong khung phone)
+   ============================================================ */
+.iv-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  opacity: 0;
+  transition: opacity 500ms ease 0ms;
+}
+
+.iv-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.iv-root.is-open .iv-scroll {
+  opacity: 1;
+}
+
+.iv-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 72px 22px 48px;
+}
+
+/* ---- Phân cấp cỡ chữ theo mức quan trọng ---- */
+
+/* 1. Tên cô dâu chú rể – lớn nhất */
+.iv-names {
+  font-family: 'Great Vibes', cursive;
+  font-weight: 400;
+  font-size: clamp(44px, 14vw, 64px);
+  line-height: 1.12;
+  margin: 10px 0 0;
+  color: #fdf6e6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.iv-amp {
+  font-size: clamp(26px, 8vw, 36px);
+  font-style: normal;
+  color: #e6cd92;
+  line-height: 1;
+}
+
+/* 2. Ngày cưới – lớn thứ hai */
+.iv-date-main {
+  font-size: clamp(26px, 8vw, 34px);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: #e6cd92;
+}
+
+.iv-date-sub {
+  display: block;
+  margin-top: 6px;
+  font-size: clamp(12px, 3.6vw, 14px);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: rgba(246, 234, 208, 0.78);
+}
+
+.iv-date {
+  margin-top: 18px;
+}
+
+/* 3. Nhãn mở đầu – nhỏ, chữ hoa giãn cách */
+.iv-eyebrow {
+  font-size: clamp(11px, 3.2vw, 13px);
+  font-weight: 600;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: #e6cd92;
+  margin: 0;
+}
+
+/* 4. Tên sự kiện – vừa */
+.iv-event-title {
+  font-size: clamp(17px, 5vw, 21px);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #f4e3b8;
+  margin: 0 0 8px;
+}
+
+/* 5. Giờ – nhỉnh hơn địa điểm vì quan trọng hơn */
+.iv-event-time {
+  font-size: clamp(15px, 4.4vw, 17px);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: #fdf6e6;
+  margin: 0 0 4px;
+}
+
+.iv-event-lunar {
+  font-size: clamp(11px, 3.2vw, 12.5px);
+  font-weight: 500;
+  color: rgba(230, 205, 146, 0.75);
+  margin: 0 0 6px;
+}
+
+/* 6. Địa điểm – nhỏ nhất trong khối sự kiện */
+.iv-event-place {
+  font-size: clamp(12.5px, 3.7vw, 14px);
+  font-weight: 500;
+  line-height: 1.5;
+  color: rgba(246, 234, 208, 0.82);
+  margin: 0;
+}
+
+/* 7. Thông tin phụ (gia đình, timeline, lời kết) */
+.iv-parents {
+  width: 100%;
+  margin-top: 4px;
+}
+
+.iv-parents p {
+  font-size: clamp(12px, 3.5vw, 13.5px);
+  font-weight: 500;
+  line-height: 1.6;
+  color: rgba(246, 234, 208, 0.8);
+  margin: 6px 0;
+}
+
+.iv-parents b {
+  color: #e6cd92;
+  font-weight: 600;
+}
+
+.iv-divider {
+  width: 64px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #e6cd92, transparent);
+  margin: 26px 0;
+  border: 0;
+}
+
+.iv-events {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.iv-event {
+  width: 100%;
+  border: 1px solid rgba(230, 205, 146, 0.28);
+  border-radius: 16px;
+  padding: 18px 16px;
+  background: rgba(255, 250, 240, 0.05);
+}
+
+.iv-timeline {
+  width: 100%;
+  margin-top: 30px;
+  text-align: left;
+}
+
+.iv-timeline-title {
+  font-size: clamp(13px, 3.8vw, 15px);
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #f4e3b8;
+  text-align: center;
+  margin: 0 0 16px;
+}
+
+.iv-timeline ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.iv-timeline li {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 9px 0;
+  border-bottom: 1px dashed rgba(230, 205, 146, 0.2);
+}
+
+.iv-timeline li:last-child {
+  border-bottom: 0;
+}
+
+.tl-time {
+  flex: 0 0 54px;
+  font-size: clamp(12px, 3.5vw, 13.5px);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #e6cd92;
+}
+
+.tl-text {
+  font-size: clamp(12px, 3.5vw, 13.5px);
+  font-weight: 500;
+  color: rgba(246, 234, 208, 0.85);
+}
+
+.iv-closing {
+  font-size: clamp(13px, 3.9vw, 15px);
+  font-weight: 500;
+  font-style: italic;
+  color: #f4e3b8;
+  margin: 34px 0 0;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   HIỆN DẦN THEO TẦNG – MỖI TRANSITION <= 500ms,
+   DELAY TỐI ĐA 200ms => TỔNG KHÔNG VƯỢT 500ms
+   ============================================================ */
+.rv {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 300ms ease, transform 300ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.iv-root.is-open .rv {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rv,
+  .iv-cover,
+  .iv-scroll {
+    transition-duration: 200ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  .iv-cover-hint {
+    animation: none;
+  }
+}

@@ -1,0 +1,120 @@
+/* Bản 2 – Tối giản: hai cánh trượt sang hai bên khi bấm */
+
+.min-cover {
+  flex-direction: row;
+  padding: 0;
+  overflow: hidden;
+  gap: 0;
+  background: rgba(16, 6, 6, 0.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.min-panel {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 50%;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(180deg, #f7f2ea 0%, #ece3d5 100%);
+  transition: transform 500ms cubic-bezier(0.65, 0, 0.35, 1);
+  will-change: transform;
+}
+
+.min-panel-left {
+  left: 0;
+  justify-content: flex-end;
+  border-right: 1px solid rgba(20, 8, 8, 0.12);
+}
+
+.min-panel-right {
+  right: 0;
+  justify-content: flex-start;
+  border-left: 1px solid rgba(20, 8, 8, 0.12);
+}
+
+.min-vert {
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(26px, 8vw, 36px);
+  color: #4a1418;
+  padding: 0 clamp(14px, 5vw, 26px);
+  white-space: nowrap;
+}
+
+.iv-root.is-open .min-panel-left {
+  transform: translateX(-100%);
+}
+
+.iv-root.is-open .min-panel-right {
+  transform: translateX(100%);
+}
+
+/* Trung tâm nổi giữa hai cánh */
+.min-center {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  transition: opacity 300ms ease, transform 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.iv-root.is-open .min-center {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.min-monogram {
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(52px, 17vw, 76px);
+  color: #fdf8f0;
+  line-height: 1;
+  text-shadow: 0 6px 24px rgba(0, 0, 0, 0.55);
+}
+
+.min-monogram i {
+  font-style: normal;
+  font-size: 0.5em;
+  color: #e6cd92;
+  padding: 0 6px;
+  vertical-align: middle;
+}
+
+.min-date {
+  font-size: clamp(16px, 5vw, 21px);
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  color: #e6cd92;
+  text-shadow: 0 3px 14px rgba(0, 0, 0, 0.6);
+}
+
+.min-cover-hint {
+  font-size: clamp(11px, 3.2vw, 13px);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(246, 234, 208, 0.9);
+  border: 1px solid rgba(230, 205, 146, 0.5);
+  border-radius: 999px;
+  padding: 11px 22px;
+  margin-top: 8px;
+  animation: min-hint 500ms ease-in-out infinite alternate;
+}
+
+@keyframes min-hint {
+  from {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(230, 205, 146, 0.35);
+  }
+  to {
+    transform: scale(1.04);
+    box-shadow: 0 0 0 10px rgba(230, 205, 146, 0);
+  }
+}
+
+/* Nền nhẹ cho nội dung khi chọn bản tối giản */
+.min-root .iv-event {
+  background: rgba(255, 252, 246, 0.07);
+  border-color: rgba(230, 205, 146, 0.32);
+}
