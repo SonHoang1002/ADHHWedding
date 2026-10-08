@@ -3,7 +3,7 @@ import { inviteData as d } from "./inviteData";
 import "./invites.css";
 import "./InviteHome.css";
 
-export type InviteKind = "env" | "min" | "floral";
+export type InviteKind = "env" | "min" | "floral" | "pink";
 
 interface InviteHomeProps {
   onSelect: (kind: InviteKind) => void;
@@ -13,6 +13,7 @@ const OPTIONS: Array<{ kind: InviteKind; label: string; desc: string }> = [
   { kind: "env", label: "Phong bì cổ điển", desc: "Nắp bì bung ra khi chạm" },
   { kind: "min", label: "Tối giản hiện đại", desc: "Hai cánh trượt sang hai bên" },
   { kind: "floral", label: "Thiệp hoa", desc: "Hai nửa giấy mở như thiệp gấp" },
+  { kind: "pink", label: "Hồng pastel", desc: "Nhiều phần, cuộn dài như mẫu" },
 ];
 
 const InviteHome: FC<InviteHomeProps> = ({ onSelect }): ReactElement => (

@@ -20,8 +20,8 @@ function useFallingHearts(count = 18) {
 }
 
 
-export default function BackgroundHeartsLayer() {
-  const fallingHearts = useFallingHearts(1000);
+export default function BackgroundHeartsLayer({ count = 1000 }) {
+  const fallingHearts = useFallingHearts(count);
 
   return (
     <div
