@@ -1,0 +1,195 @@
+export const ngayChinhThuc = "12 tháng 12, 2026";
+
+// Thời điểm bắt đầu / kết thúc cả ngày cưới (dùng cho Countdown & Save the Date)
+export const thoiDiemCuoi = {
+  batDau: "2026-12-12T07:00:00+07:00",
+  ketThuc: "2026-12-12T13:00:00+07:00",
+  gcalBatDau: "20261212T070000",
+  gcalKetThuc: "20261212T130000",
+  diaChi: "11 ngõ 4 Lam Sơn, Vĩnh Yên, Phú Thọ",
+};
+
+export const chuRe = {
+  ten: "Huy Hiếu",
+  tenDayDu: "Phạm Huy Hiếu",
+  bo: "Phạm Huy Luật",
+  me: "Dương Thị Hoan",
+  queQuan: "Vĩnh Yên, Phú Thọ",
+  anh: "/groom.jpg",
+};
+
+export const coDau = {
+  ten: "Ánh Dương",
+  tenDayDu: "Nguyễn Thị Ánh Dương",
+  bo: "Nguyễn Trọng Hưng",
+  me: "Đặng Thị Thuý Hằng",
+  queQuan: "Lê Thanh Nghị, Hải Phòng",
+  anh: "/bride.jpg",
+};
+
+export const doiNetVeChungToi =
+  "Chúng mình gặp nhau trong một ngày rất bình thường, rồi dần trở thành điều đặc biệt nhất của nhau. " +
+  "Sau bao năm đồng hành, cùng nhau đi qua những vui buồn, chúng mình quyết định nắm tay nhau bước vào một chặng đường mới. " +
+  "Sự hiện diện của bạn chính là món quà ý nghĩa nhất trong ngày trọng đại này.";
+
+export const leAnHoi = {
+  ngayDuongLich: "29/11/2026",
+  ngayAmLich: "Tức 21/10 năm Bính Ngọ",
+  thoiGian: "8h00 – 9h00",
+  diaDiem: "Tại nhà gái: 88 Mạc Đĩnh Chi, Lê Thanh Nghị, Hải Phòng",
+};
+
+export const leVuQuy = {
+  thoiGian: "7h00 – 8h00",
+  diaDiem: "Tại nhà gái: 88 Mạc Đĩnh Chi, Lê Thanh Nghị, Hải Phòng",
+};
+
+export const leThanhHon = {
+  thoiGian: "10h30 – 11h30",
+  diaDiem: "Tại nhà trai: 11 ngõ 4 Lam Sơn, Vĩnh Yên, Phú Thọ",
+};
+
+export const tiecCuoi = {
+  thoiGian: "11h30",
+  diaDiem: "Tại nhà trai: 11 ngõ 4 Lam Sơn, Vĩnh Yên, Phú Thọ",
+};
+
+export const leCuoi = {
+  ngayDuongLich: "12/12/2026",
+  ngayAmLich: "Tức 4/11 năm Bính Ngọ",
+  leVuQuy,
+  leThanhHon,
+  tiecCuoi,
+};
+
+export const lichTrinhLeCuoi = [
+  { thoiGian: "6h30", suKien: "Đón khách tại nhà gái" },
+  { thoiGian: "7h00", suKien: "Lễ Vu Quy tại nhà gái" },
+  { thoiGian: "8h00", suKien: "Nhà trai đón dâu" },
+  { thoiGian: "10h00", suKien: "Đón khách tại nhà trai" },
+  { thoiGian: "10h30", suKien: "Lễ Thành Hôn tại nhà trai" },
+  { thoiGian: "11h30", suKien: "Khai tiệc" },
+  { thoiGian: "12h00", suKien: "Chụp photobooth" },
+];
+
+// ===== Dữ liệu dùng cho các thẻ "Ngày trọng đại" =====
+export interface SuKienCard {
+  id: string;
+  ten: string;
+  ngay: string;
+  ngayAm: string;
+  thoiGian: string;
+  diaDiem: string; // hiển thị
+  diaChi: string; // dùng cho Google Map
+  anh: string;
+}
+
+const diaChiNhaGai = "88 Mạc Đĩnh Chi, Lê Thanh Nghị, Hải Phòng";
+const diaChiNhaTrai = "11 ngõ 4 Lam Sơn, Vĩnh Yên, Phú Thọ";
+
+export const danhSachSuKien: SuKienCard[] = [
+  {
+    id: "an-hoi",
+    ten: "Lễ Ăn Hỏi",
+    ngay: leAnHoi.ngayDuongLich,
+    ngayAm: leAnHoi.ngayAmLich,
+    thoiGian: leAnHoi.thoiGian,
+    diaDiem: leAnHoi.diaDiem,
+    diaChi: diaChiNhaGai,
+    anh: "/couple.jpg",
+  },
+  {
+    id: "vu-quy",
+    ten: "Lễ Vu Quy",
+    ngay: leCuoi.ngayDuongLich,
+    ngayAm: leCuoi.ngayAmLich,
+    thoiGian: leVuQuy.thoiGian,
+    diaDiem: leVuQuy.diaDiem,
+    diaChi: diaChiNhaGai,
+    anh: "/couple.jpg",
+  },
+  {
+    id: "thanh-hon",
+    ten: "Lễ Thành Hôn",
+    ngay: leCuoi.ngayDuongLich,
+    ngayAm: leCuoi.ngayAmLich,
+    thoiGian: leThanhHon.thoiGian,
+    diaDiem: leThanhHon.diaDiem,
+    diaChi: diaChiNhaTrai,
+    anh: "/couple.jpg",
+  },
+  {
+    id: "tiec-cuoi",
+    ten: "Tiệc Cưới",
+    ngay: leCuoi.ngayDuongLich,
+    ngayAm: leCuoi.ngayAmLich,
+    thoiGian: tiecCuoi.thoiGian,
+    diaDiem: tiecCuoi.diaDiem,
+    diaChi: diaChiNhaTrai,
+    anh: "/couple.jpg",
+  },
+];
+
+// ===== Dresscode =====
+export const dresscode = [
+  { mau: "#5a6137", ten: "Xanh olive" },
+  { mau: "#a8ad84", ten: "Xanh sage" },
+  { mau: "#e8dcc4", ten: "Kem" },
+  { mau: "#7a2a30", ten: "Đỏ rượu" },
+];
+
+// ===== Thư viện ảnh =====
+export const thuVienAnh = [
+  "/gallery/1.jpg",
+  "/gallery/2.jpg",
+  "/gallery/3.jpg",
+  "/gallery/4.jpg",
+  "/gallery/5.jpg",
+  "/gallery/6.jpg",
+  "/gallery/7.jpg",
+  "/gallery/8.jpg",
+  "/gallery/9.jpg",
+];
+
+// ===== Lời nhắn mẫu (sau này thay bằng dữ liệu từ WebSocket) =====
+export interface LoiNhan {
+  id: string;
+  ten: string;
+  bietDanh?: string;
+  noiDung: string;
+  thoiGian: string; // ISO string
+}
+
+export const loiNhanMau: LoiNhan[] = [
+  {
+    id: "w1",
+    ten: "Minh Anh",
+    bietDanh: "Bạn thân cô dâu",
+    noiDung: "Chúc hai bạn trăm năm hạnh phúc, mãi yêu thương và nắm tay nhau thật lâu nhé!",
+    thoiGian: "2026-10-08T20:15:00+07:00",
+  },
+  {
+    id: "w2",
+    ten: "Quang Huy",
+    bietDanh: "Đồng nghiệp chú rể",
+    noiDung: "Chúc mừng ông bạn sắp lên xe hoa. Hạnh phúc viên mãn nhé!",
+    thoiGian: "2026-10-08T21:40:00+07:00",
+  },
+  {
+    id: "w3",
+    ten: "Thu Hà",
+    bietDanh: "Dì Hà",
+    noiDung: "Dì chúc hai con luôn hạnh phúc, sớm có tin vui. Hẹn gặp hai con ngày cưới!",
+    thoiGian: "2026-10-09T06:05:00+07:00",
+  },
+  {
+    id: "w4",
+    ten: "Đức Mạnh",
+    noiDung: "Chúc cô dâu chú rể trăm năm hạnh phúc!",
+    thoiGian: "2026-10-09T07:10:00+07:00",
+  },
+];
+
+export const loiCamOn =
+  "Cảm ơn bạn đã dành thời gian đọc thiệp và chia sẻ niềm vui cùng chúng mình. " +
+  "Sự có mặt và lời chúc của bạn là món quà quý giá nhất, giúp ngày trọng đại của chúng mình thêm trọn vẹn.";
