@@ -12,7 +12,6 @@ import "./WeddingInvite.css";
 import {
   chuRe,
   coDau,
-  doiNetVeChungToi,
   danhSachSuKien,
   dresscode,
   lichTrinhLeCuoi,
@@ -480,44 +479,6 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
     27, 28, 29, 30, 31,
   ];
 
-  const eventTitle = `Đám cưới ${groom} & ${bride}`;
-  const eventDetails = `Trân trọng kính mời bạn đến dự đám cưới của ${groom} & ${bride}.`;
-
-  // Mở thẳng Google Calendar (trên điện thoại sẽ gợi ý mở app Calendar)
-  const googleCalendarUrl =
-    `https://calendar.google.com/calendar/render?action=TEMPLATE` +
-    `&text=${enc(eventTitle)}` +
-    `&dates=${thoiDiemCuoi.gcalBatDau}/${thoiDiemCuoi.gcalKetThuc}` +
-    `&ctz=Asia/Ho_Chi_Minh` +
-    `&details=${enc(eventDetails)}` +
-    `&location=${enc(thoiDiemCuoi.diaChi)}`;
-
-  // Tải file .ics cho Apple Calendar / ứng dụng lịch khác
-  const downloadIcs = (): void => {
-    const esc = (s: string): string => s.replace(/,/g, "\\,").replace(/;/g, "\\;");
-    const ics = [
-      "BEGIN:VCALENDAR",
-      "VERSION:2.0",
-      "PRODID:-//Wedding Invite//VI",
-      "BEGIN:VEVENT",
-      `UID:wedding-${thoiDiemCuoi.gcalBatDau}@invite`,
-      `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, "").split(".")[0]}Z`,
-      `DTSTART;TZID=Asia/Ho_Chi_Minh:${thoiDiemCuoi.gcalBatDau}`,
-      `DTEND;TZID=Asia/Ho_Chi_Minh:${thoiDiemCuoi.gcalKetThuc}`,
-      `SUMMARY:${esc(eventTitle)}`,
-      `DESCRIPTION:${esc(eventDetails)}`,
-      `LOCATION:${esc(thoiDiemCuoi.diaChi)}`,
-      "END:VEVENT",
-      "END:VCALENDAR",
-    ].join("\r\n");
-    const url = URL.createObjectURL(new Blob([ics], { type: "text/calendar;charset=utf-8" }));
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "dam-cuoi.ics";
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
   /* ----- Ảnh ----- */
   const galleryAnims: Anim[] = ["fade", "left", "right", "zoom", "rotate", "flip"];
   const previewImages = thuVienAnh.slice(0, 6);
@@ -636,15 +597,6 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
                   <div className="calendar-gold-line" />
                 </div>
 
-                <div className="calendar-actions">
-                  <a className="btn-olive" href={googleCalendarUrl} target="_blank" rel="noreferrer">
-                    Thêm vào Google Calendar
-                  </a>
-                  <button type="button" className="btn-outline" onClick={downloadIcs}>
-                    Tải file lịch (.ics)
-                  </button>
-                </div>
-
                 <div className="calendar-grid-header">
                   {daysOfWeek.map((day) => (
                     <div key={day} className="day-name">
@@ -684,11 +636,6 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
             {/* ===== 2) CHÚ RỂ & CÔ DÂU ===== */}
             <section className="page-section section-couple">
               <SectionTitle sub="Gia đình hai bên" title="Chú rể & Cô dâu" />
-
-              <Reveal className="about-block" anim="fade">
-                <h3 className="about-title">Đôi nét về chúng tôi</h3>
-                <p className="about-text">{doiNetVeChungToi}</p>
-              </Reveal>
 
               <div className="person-list">
                 <Reveal className="person-card" anim="left">

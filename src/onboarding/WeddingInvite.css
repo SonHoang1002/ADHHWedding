@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cinzel:wght@500;700&family=Lora:ital,wght@0,400;0,500;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lora:ital,wght@0,400;0,500;0,700;1,400&display=swap');
 
 :root {
   --olive: #5a6137;
@@ -87,7 +87,7 @@ body {
   align-items: center;
   justify-content: center;
   padding: 20px 16px;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: 'Lora', Georgia, serif;
 }
 
 .invite-content {
@@ -145,6 +145,10 @@ body {
 
 .envelope-back {
   border: 1.5px solid transparent;
+  /* Lớp lót bên trong phong bì: hiện ra khi nắp mở */
+  background:
+    linear-gradient(180deg, rgba(90, 60, 30, 0.18) 0%, rgba(90, 60, 30, 0) 55%),
+    #e8dcc4;
 }
 
 .envelope-side-fold-left,
@@ -352,7 +356,7 @@ body {
 }
 
 .overlay-amp {
-  font-family: Georgia, serif;
+  font-family: 'Lora', Georgia, serif;
   font-size: 0.75em;
   color: #f3d69b;
   margin: 0 6px;
@@ -369,7 +373,7 @@ body {
 }
 
 .overlay-date {
-  font-family: 'Cinzel', serif;
+  font-family: 'Lora', Georgia, serif;
   font-size: clamp(16px, 4vw, 24px);
   color: #fdf2d1;
   letter-spacing: 3px;
@@ -380,7 +384,7 @@ body {
 }
 
 .overlay-location {
-  font-family: Georgia, serif;
+  font-family: 'Lora', Georgia, serif;
   font-size: clamp(14px, 3.5vw, 18px);
   color: #e2d3be;
   letter-spacing: 2px;
@@ -394,7 +398,7 @@ body {
   background: none;
   border: none;
   color: #fdf2d1;
-  font-family: 'Cinzel', serif;
+  font-family: 'Lora', Georgia, serif;
   font-size: 11px;
   letter-spacing: 2px;
   margin-top: 18px;
@@ -471,7 +475,7 @@ body {
 }
 
 .section-sub {
-  font-family: 'Cinzel', serif;
+  font-family: 'Lora', Georgia, serif;
   font-size: 11px;
   letter-spacing: 3px;
   color: var(--gold);
@@ -480,10 +484,10 @@ body {
 }
 
 .section-heading {
-  font-family: 'Cinzel', serif;
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: 2px;
+  font-family: 'Great Vibes', cursive;
+  font-size: 42px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
   color: var(--olive);
   margin: 0 0 12px;
 }
@@ -563,7 +567,7 @@ body {
 }
 
 .calendar-title {
-  font-family: 'Cinzel', serif;
+  font-family: 'Lora', Georgia, serif;
   font-size: 24px;
   font-weight: 700;
   color: var(--olive);
@@ -586,14 +590,6 @@ body {
   border-radius: 2px;
 }
 
-.calendar-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-  margin-bottom: 22px;
-}
-
 .calendar-grid-header {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -603,7 +599,7 @@ body {
 }
 
 .day-name {
-  font-family: 'Cinzel', serif;
+  font-family: 'Lora', Georgia, serif;
   font-size: 12px;
   font-weight: 700;
   color: var(--gold);
@@ -724,20 +720,6 @@ body {
 /* ============================================================
    2) CHÚ RỂ & CÔ DÂU
    ============================================================ */
-.about-title {
-  font-family: 'Great Vibes', cursive;
-  font-size: 34px;
-  font-weight: 400;
-  color: var(--olive);
-  margin: 0 0 8px;
-}
-
-.about-text {
-  font-size: 15px;
-  line-height: 1.8;
-  margin: 0 0 34px;
-}
-
 .person-list {
   display: flex;
   flex-direction: column;
@@ -762,7 +744,7 @@ body {
 }
 
 .person-role {
-  font-family: 'Cinzel', serif;
+  font-family: 'Lora', Georgia, serif;
   font-size: 11px;
   letter-spacing: 3px;
   color: var(--gold);
@@ -770,7 +752,7 @@ body {
 }
 
 .person-name {
-  font-family: 'Cinzel', serif;
+  font-family: 'Lora', Georgia, serif;
   font-size: 22px;
   color: var(--olive);
   margin: 6px 0 10px;
@@ -824,7 +806,7 @@ body {
 }
 
 .event-title {
-  font-family: 'Cinzel', serif;
+  font-family: 'Lora', Georgia, serif;
   font-size: 20px;
   color: var(--olive);
   margin: 0 0 12px;
@@ -842,7 +824,7 @@ body {
 }
 
 .event-label {
-  font-family: 'Cinzel', serif;
+  font-family: 'Lora', Georgia, serif;
   font-size: 11px;
   letter-spacing: 1.5px;
   color: var(--gold);
@@ -976,7 +958,7 @@ body {
 }
 
 .timeline-time b {
-  font-family: 'Cinzel', serif;
+  font-family: 'Lora', Georgia, serif;
   color: var(--olive);
   font-size: 16px;
 }
@@ -1174,7 +1156,7 @@ body {
   right: 0;
   text-align: center;
   color: #e9dfc8;
-  font-family: 'Cinzel', serif;
+  font-family: 'Lora', Georgia, serif;
   letter-spacing: 2px;
   font-size: 13px;
 }
@@ -1197,7 +1179,7 @@ body {
 }
 
 .countdown-value {
-  font-family: 'Cinzel', serif;
+  font-family: 'Lora', Georgia, serif;
   font-size: clamp(24px, 8vw, 34px);
   font-weight: 700;
   line-height: 1.1;
@@ -1274,7 +1256,7 @@ body {
 }
 
 .wishes-modal-title {
-  font-family: 'Cinzel', serif;
+  font-family: 'Lora', Georgia, serif;
   color: #fdf2d1;
   text-align: center;
   font-size: 18px;

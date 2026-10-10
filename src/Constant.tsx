@@ -27,11 +27,6 @@ export const coDau = {
   anh: "/bride.jpg",
 };
 
-export const doiNetVeChungToi =
-  "Chúng mình gặp nhau trong một ngày rất bình thường, rồi dần trở thành điều đặc biệt nhất của nhau. " +
-  "Sau bao năm đồng hành, cùng nhau đi qua những vui buồn, chúng mình quyết định nắm tay nhau bước vào một chặng đường mới. " +
-  "Sự hiện diện của bạn chính là món quà ý nghĩa nhất trong ngày trọng đại này.";
-
 export const leAnHoi = {
   ngayDuongLich: "29/11/2026",
   ngayAmLich: "Tức 21/10 năm Bính Ngọ",
