@@ -1,9 +1,10 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
+test('renders the invitation picker with three designs', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  expect(screen.getByText(/Trân trọng kính mời/i)).toBeInTheDocument();
+  expect(screen.getByText('Phong bì cổ điển')).toBeInTheDocument();
+  expect(screen.getByText('Tối giản hiện đại')).toBeInTheDocument();
+  expect(screen.getByText('Thiệp hoa')).toBeInTheDocument();
 });

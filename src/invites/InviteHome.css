@@ -1,0 +1,72 @@
+/* Màn hình chọn 3 bản thiệp */
+
+.home-body {
+  gap: 0;
+  justify-content: center;
+  min-height: 100%;
+}
+
+.home-rv {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 300ms ease, transform 300ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.home-root.is-open .home-rv {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.home-pick {
+  font-size: clamp(11px, 3.2vw, 13px);
+  font-weight: 600;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: rgba(246, 234, 208, 0.72);
+  margin: 34px 0 18px;
+}
+
+.home-options {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.home-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 18px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(230, 205, 146, 0.4);
+  background: rgba(255, 250, 240, 0.08);
+  color: #fdf6e6;
+  cursor: pointer;
+  font-family: 'Cinzel', serif;
+  transition: opacity 300ms ease, transform 300ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    background 300ms ease, border-color 300ms ease;
+}
+
+.home-option:active {
+  transform: scale(0.98);
+  background: rgba(255, 250, 240, 0.16);
+  border-color: rgba(230, 205, 146, 0.8);
+  transition-duration: 200ms;
+}
+
+.home-option-label {
+  font-size: clamp(16px, 4.8vw, 19px);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.home-option-desc {
+  font-size: clamp(12px, 3.5vw, 13.5px);
+  font-weight: 500;
+  color: rgba(246, 234, 208, 0.72);
+}

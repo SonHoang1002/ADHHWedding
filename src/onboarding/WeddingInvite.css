@@ -1,4 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cinzel:wght@500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lora:ital,wght@0,400;0,500;0,700;1,400&display=swap');
+
+:root {
+  --olive: #5a6137;
+  --olive-dark: #454b29;
+  --paper: #f6f2e6;
+  --paper-2: #efe9d6;
+  --gold: #b79a5b;
+  --ink: #4a4f2f;
+}
 
 html,
 body {
@@ -17,28 +26,24 @@ body {
 }
 
 /* ============================================================
-   CONTAINER CUỘN SIÊU MƯỢT (SMOOTH & SEAMLESS SCROLL)
+   CONTAINER CUỘN (không còn scroll-snap)
    ============================================================ */
 .main-scroll-sections {
+  position: relative;
+  z-index: 1;
   width: 100vw;
   height: 100vh;
   overflow-y: auto;
+  overflow-x: hidden;
   scroll-behavior: smooth;
-  scroll-snap-type: y mandatory;
   -webkit-overflow-scrolling: touch;
-  /* Giúp trượt êm ái trên iOS Safari */
   overscroll-behavior-y: contain;
-  /* Ngăn chặn hiệu ứng giật lùi trang */
-}
-
-/* Ẩn thanh cuộn để tăng tính thẩm mỹ */
-.main-scroll-sections::-webkit-scrollbar {
-  display: none;
-}
-
-.main-scroll-sections {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+.main-scroll-sections::-webkit-scrollbar {
+  display: none;
 }
 
 /* BACKGROUND TRÁI TIM BAY */
@@ -82,7 +87,7 @@ body {
   align-items: center;
   justify-content: center;
   padding: 20px 16px;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: 'Lora', Georgia, serif;
 }
 
 .invite-content {
@@ -140,6 +145,10 @@ body {
 
 .envelope-back {
   border: 1.5px solid transparent;
+  /* Lớp lót bên trong phong bì: hiện ra khi nắp mở */
+  background:
+    linear-gradient(180deg, rgba(90, 60, 30, 0.18) 0%, rgba(90, 60, 30, 0) 55%),
+    #e8dcc4;
 }
 
 .envelope-side-fold-left,
@@ -284,15 +293,12 @@ body {
 }
 
 /* ============================================================
-   SECTION 1: ẢNH CƯỚI & NỘI DUNG CHÍNH
+   BÌA: ẢNH CƯỚI
    ============================================================ */
 .section-photo-hero {
   width: 100vw;
   height: 100vh;
   height: 100dvh;
-  /* Dynamic viewport height cho trình duyệt di động */
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
   position: relative;
   display: flex;
   align-items: center;
@@ -350,7 +356,7 @@ body {
 }
 
 .overlay-amp {
-  font-family: Georgia, serif;
+  font-family: 'Lora', Georgia, serif;
   font-size: 0.75em;
   color: #f3d69b;
   margin: 0 6px;
@@ -367,7 +373,7 @@ body {
 }
 
 .overlay-date {
-  font-family: 'Cinzel', serif;
+  font-family: 'Lora', Georgia, serif;
   font-size: clamp(16px, 4vw, 24px);
   color: #fdf2d1;
   letter-spacing: 3px;
@@ -378,7 +384,7 @@ body {
 }
 
 .overlay-location {
-  font-family: Georgia, serif;
+  font-family: 'Lora', Georgia, serif;
   font-size: clamp(14px, 3.5vw, 18px);
   color: #e2d3be;
   letter-spacing: 2px;
@@ -392,7 +398,7 @@ body {
   background: none;
   border: none;
   color: #fdf2d1;
-  font-family: 'Cinzel', serif;
+  font-family: 'Lora', Georgia, serif;
   font-size: 11px;
   letter-spacing: 2px;
   margin-top: 18px;
@@ -438,82 +444,165 @@ body {
 }
 
 /* ============================================================
-   SECTION 2: BẢNG LỊCH THÁNG 12 / 2026
+   NỀN GIẤY KEM CHO CÁC KHU VỰC NỘI DUNG
+   ============================================================ */
+.content-flow {
+  position: relative;
+  background-color: var(--paper);
+  background-image:
+    radial-gradient(circle at 20% 10%, rgba(255, 255, 255, 0.6), transparent 40%),
+    radial-gradient(circle at 80% 90%, rgba(183, 154, 91, 0.12), transparent 45%);
+  color: var(--ink);
+  font-family: 'Lora', Georgia, serif;
+  box-shadow: 0 -18px 30px rgba(0, 0, 0, 0.35);
+}
+
+.page-section {
+  box-sizing: border-box;
+  padding: 56px 20px;
+  max-width: 520px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.page-section+.page-section {
+  border-top: 1px solid rgba(90, 97, 55, 0.12);
+}
+
+/* Tiêu đề khu vực */
+.section-title {
+  margin-bottom: 28px;
+}
+
+.section-sub {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.section-heading {
+  font-family: 'Great Vibes', cursive;
+  font-size: 42px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  color: var(--olive);
+  margin: 0 0 12px;
+}
+
+.section-line {
+  width: 60px;
+  height: 2px;
+  background: var(--gold);
+  margin: 0 auto;
+  border-radius: 2px;
+}
+
+/* ============================================================
+   HIỆU ỨNG HIỆN DẦN KHI CUỘN (fade chung + chuyển động riêng)
+   ============================================================ */
+.reveal {
+  opacity: 0;
+  transition: opacity 800ms ease, transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.anim-up {
+  transform: translate3d(0, 36px, 0);
+}
+
+.anim-fade {
+  transform: none;
+}
+
+.anim-left {
+  transform: translate3d(-48px, 0, 0);
+}
+
+.anim-right {
+  transform: translate3d(48px, 0, 0);
+}
+
+.anim-zoom {
+  transform: scale(0.8);
+}
+
+.anim-rotate {
+  transform: rotate(-8deg) scale(0.9);
+}
+
+.anim-flip {
+  transform: perspective(600px) rotateY(70deg);
+}
+
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* ============================================================
+   1) LỊCH
    ============================================================ */
 .section-calendar {
-  width: 100vw;
-  height: 100vh;
-  height: 100dvh;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px 16px;
-  box-sizing: border-box;
-  background: radial-gradient(circle at center, rgb(95, 22, 28) 0%, rgb(48, 8, 12) 100%);
+  padding-top: 64px;
 }
 
 .calendar-card {
-  width: min(90vw, 420px);
-  background: rgba(255, 250, 243, 0.06);
-  border: 1px solid rgba(217, 196, 138, 0.35);
-  border-radius: 16px;
-  padding: 24px 20px;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-  color: #f4efe6;
-  text-align: center;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(183, 154, 91, 0.45);
+  border-radius: 20px;
+  padding: 26px 20px 22px;
+  box-shadow: 0 12px 30px rgba(70, 75, 41, 0.14);
   opacity: 0;
   transform: translate3d(0, 30px, 0) scale(0.97);
   transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity;
 }
 
-.section-calendar.is-animated .calendar-card {
+.calendar-card.is-in {
   opacity: 1;
-  transform: translate3d(0, 0, 0) scale(1);
-}
-
-.calendar-subtitle {
-  font-family: 'Cinzel', serif;
-  font-size: 11px;
-  letter-spacing: 3px;
-  color: #d9c48a;
-  margin-bottom: 4px;
+  transform: none;
 }
 
 .calendar-title {
-  font-family: 'Cinzel', serif;
-  font-size: 22px;
+  font-family: 'Lora', Georgia, serif;
+  font-size: 24px;
   font-weight: 700;
-  color: #fff8eb;
-  margin: 0 0 12px;
+  color: var(--olive);
+  margin: 0 0 6px;
   letter-spacing: 2px;
+}
+
+.calendar-subtitle {
+  font-family: 'Great Vibes', cursive;
+  font-size: 32px;
+  color: var(--gold);
+  line-height: 1.1;
 }
 
 .calendar-gold-line {
   width: 60px;
   height: 2px;
-  background: #d9c48a;
-  margin: 0 auto 20px;
+  background: var(--gold);
+  margin: 10px auto 18px;
   border-radius: 2px;
 }
 
 .calendar-grid-header {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  margin-bottom: 12px;
-  border-bottom: 1px solid rgba(217, 196, 138, 0.15);
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgba(90, 97, 55, 0.18);
   padding-bottom: 8px;
 }
 
 .day-name {
-  font-family: 'Cinzel', serif;
+  font-family: 'Lora', Georgia, serif;
   font-size: 12px;
   font-weight: 700;
-  color: #d9c48a;
+  color: var(--gold);
 }
 
 .calendar-grid {
@@ -527,14 +616,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: Georgia, serif;
   font-size: 14px;
-  color: #e2d3be;
+  color: var(--ink);
   opacity: 0;
   transform: scale(0.85);
 }
 
-.section-calendar.is-animated .calendar-cell {
+.calendar-card.is-in .calendar-cell {
   animation: cellPop 350ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
@@ -555,14 +643,16 @@ body {
 }
 
 .calendar-cell.wedding-day .day-number {
-  color: #ffffff;
-  font-weight: bold;
+  color: #fff;
+  font-weight: 700;
   font-size: 15px;
+  z-index: 1;
 }
 
 .heart-highlight {
   position: absolute;
   inset: -6px;
+  z-index: -1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -572,10 +662,10 @@ body {
 .heart-svg {
   width: 100%;
   height: 100%;
-  fill: rgba(217, 196, 138, 0.25);
-  stroke: #ffd700;
-  stroke-width: 2;
-  filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.8));
+  fill: #a83a42;
+  stroke: var(--gold);
+  stroke-width: 1.5;
+  filter: drop-shadow(0 3px 6px rgba(168, 58, 66, 0.45));
   animation: heartPulse 1.8s infinite ease-in-out;
 }
 
@@ -591,27 +681,763 @@ body {
   }
 }
 
-.calendar-footer {
-  margin-top: 22px;
-  padding-top: 14px;
-  border-top: 1px solid rgba(217, 196, 138, 0.15);
+/* Nút dùng chung */
+.btn-olive,
+.btn-outline {
+  display: inline-block;
+  box-sizing: border-box;
+  padding: 11px 20px;
+  border-radius: 999px;
+  font-family: 'Lora', Georgia, serif;
+  font-size: 13.5px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 150ms ease, background 200ms ease, color 200ms ease;
 }
 
-.wedding-countdown-tag span {
-  font-family: 'Great Vibes', cursive;
-  font-size: 26px;
-  color: #fff8eb;
+.btn-olive {
+  background: var(--olive);
+  border: 1px solid var(--olive);
+  color: #fff;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--olive);
+  color: var(--olive);
+}
+
+.btn-olive:hover,
+.btn-outline:hover {
+  transform: translateY(-1px);
+}
+
+.btn-outline:hover {
+  background: var(--olive);
+  color: #fff;
+}
+
+/* ============================================================
+   2) CHÚ RỂ & CÔ DÂU
+   ============================================================ */
+.person-list {
+  display: flex;
+  flex-direction: column;
+  gap: 38px;
+}
+
+.person-photo {
+  width: min(70vw, 280px);
+  aspect-ratio: 3 / 4;
+  margin: 0 auto 16px;
+  border-radius: 32px;
+  overflow: hidden;
+  background: linear-gradient(160deg, #d9d3b8, #b9bf95);
+  box-shadow: 0 12px 28px rgba(70, 75, 41, 0.25);
+}
+
+.person-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   display: block;
 }
 
-.wedding-countdown-tag p {
-  font-size: 12px;
-  color: #d9c48a;
-  margin: 4px 0 0;
-  font-style: italic;
-  letter-spacing: 0.5px;
+.person-role {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--gold);
+  text-transform: uppercase;
 }
 
+.person-name {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 22px;
+  color: var(--olive);
+  margin: 6px 0 10px;
+  letter-spacing: 1px;
+}
+
+.person-parents {
+  font-size: 14.5px;
+  line-height: 1.7;
+  margin: 0 0 6px;
+}
+
+.person-home {
+  font-style: italic;
+  font-size: 13.5px;
+  margin: 0;
+  color: rgba(74, 79, 47, 0.8);
+}
+
+/* ============================================================
+   3) NGÀY TRỌNG ĐẠI — THẺ SỰ KIỆN
+   ============================================================ */
+.event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.event-card {
+  background: #fffdf7;
+  border-radius: 22px;
+  overflow: hidden;
+  text-align: left;
+  box-shadow: 0 10px 28px rgba(70, 75, 41, 0.18), 0 2px 6px rgba(70, 75, 41, 0.08);
+}
+
+.event-photo {
+  aspect-ratio: 16 / 10;
+  background: linear-gradient(160deg, #d9d3b8, #b9bf95);
+}
+
+.event-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.event-body {
+  padding: 18px 18px 20px;
+}
+
+.event-title {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 20px;
+  color: var(--olive);
+  margin: 0 0 12px;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.event-row {
+  display: grid;
+  grid-template-columns: 74px 1fr;
+  gap: 8px;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+.event-label {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: var(--gold);
+  text-transform: uppercase;
+  padding-top: 3px;
+}
+
+.event-lunar {
+  display: block;
+  font-size: 12.5px;
+  color: rgba(74, 79, 47, 0.75);
+}
+
+.event-map-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  background: transparent;
+  border: 1px solid rgba(90, 97, 55, 0.4);
+  border-radius: 12px;
+  color: var(--olive);
+  font-family: 'Lora', Georgia, serif;
+  font-size: 13.5px;
+  cursor: pointer;
+}
+
+.chevron {
+  width: 20px;
+  height: 20px;
+  transition: transform 300ms ease;
+}
+
+.chevron.is-up {
+  transform: rotate(180deg);
+}
+
+.event-map {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 450ms ease, opacity 350ms ease, margin-top 450ms ease;
+}
+
+.event-map.is-open {
+  max-height: 340px;
+  opacity: 1;
+  margin-top: 12px;
+}
+
+.event-map iframe {
+  display: block;
+  width: 100%;
+  height: 250px;
+  border: 0;
+  border-radius: 14px;
+}
+
+.event-directions {
+  display: block;
+  margin-top: 8px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--olive);
+}
+
+/* ============================================================
+   4) DRESSCODE
+   ============================================================ */
+.dress-list {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.dress-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 70px;
+}
+
+.dress-circle {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: 3px solid #fffdf7;
+  box-shadow: 0 6px 14px rgba(70, 75, 41, 0.3);
+}
+
+.dress-name {
+  font-size: 12px;
+}
+
+/* ============================================================
+   5) TIMELINE DỌC
+   ============================================================ */
+.timeline {
+  position: relative;
+  text-align: left;
+  padding: 4px 0;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 98px;
+  width: 2px;
+  background: linear-gradient(to bottom, transparent, rgba(183, 154, 91, 0.7) 8%, rgba(183, 154, 91, 0.7) 92%, transparent);
+}
+
+.timeline-item {
+  display: grid;
+  grid-template-columns: 82px 34px 1fr;
+  align-items: center;
+  padding: 12px 0;
+}
+
+.timeline-time {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+}
+
+.timeline-time b {
+  font-family: 'Lora', Georgia, serif;
+  color: var(--olive);
+  font-size: 16px;
+}
+
+.timeline-time span {
+  font-size: 11px;
+  color: rgba(74, 79, 47, 0.7);
+}
+
+.timeline-dot {
+  width: 14px;
+  height: 14px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 3px solid var(--olive);
+  box-shadow: 0 0 0 4px rgba(90, 97, 55, 0.12);
+  position: relative;
+  z-index: 1;
+}
+
+.timeline-text {
+  font-size: 14.5px;
+  line-height: 1.5;
+  padding-left: 4px;
+}
+
+/* ============================================================
+   6) HÌNH ẢNH
+   ============================================================ */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-rows: 110px;
+  grid-auto-flow: dense;
+  gap: 10px;
+}
+
+.gallery-item {
+  border-radius: 16px;
+  overflow: hidden;
+  background: linear-gradient(160deg, #d9d3b8, #b9bf95);
+  box-shadow: 0 6px 16px rgba(70, 75, 41, 0.2);
+}
+
+.gallery-item:nth-child(1) {
+  grid-row: span 3;
+}
+
+.gallery-item:nth-child(2) {
+  grid-row: span 2;
+}
+
+.gallery-item:nth-child(3) {
+  grid-row: span 2;
+}
+
+.gallery-item:nth-child(4) {
+  grid-row: span 3;
+}
+
+.gallery-item:nth-child(5) {
+  grid-row: span 3;
+}
+
+.gallery-item:nth-child(6) {
+  grid-row: span 2;
+}
+
+.gallery-btn {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+}
+
+.gallery-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 500ms ease;
+}
+
+.gallery-btn:hover img {
+  transform: scale(1.05);
+}
+
+.gallery-all {
+  margin-top: 22px;
+}
+
+/* ===== Carousel / modal toàn màn hình ===== */
+.carousel-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(20, 12, 12, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: overlayIn 300ms ease;
+}
+
+@keyframes overlayIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.overlay-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 3;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.carousel-viewport {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.carousel-track {
+  display: flex;
+  height: 100%;
+  transition: transform 450ms cubic-bezier(0.22, 0.8, 0.3, 1);
+}
+
+.carousel-slide {
+  flex: 0 0 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 12px;
+  box-sizing: border-box;
+}
+
+.carousel-slide img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 12px;
+}
+
+.carousel-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.carousel-nav:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.carousel-nav.prev {
+  left: 10px;
+}
+
+.carousel-nav.next {
+  right: 10px;
+}
+
+.carousel-counter {
+  position: absolute;
+  bottom: 22px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: #e9dfc8;
+  font-family: 'Lora', Georgia, serif;
+  letter-spacing: 2px;
+  font-size: 13px;
+}
+
+/* ============================================================
+   7) COUNTDOWN
+   ============================================================ */
+.countdown-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.countdown-box {
+  background: var(--olive);
+  color: #fff;
+  border-radius: 16px;
+  padding: 16px 4px 12px;
+  box-shadow: 0 8px 18px rgba(70, 75, 41, 0.28);
+}
+
+.countdown-value {
+  font-family: 'Lora', Georgia, serif;
+  font-size: clamp(24px, 8vw, 34px);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.countdown-label {
+  margin-top: 4px;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #e8dcc4;
+}
+
+/* ============================================================
+   8) LỜI NHẮN
+   ============================================================ */
+.wish-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.wish-item {
+  text-align: left;
+  background: #fffdf7;
+  border: 1px solid rgba(183, 154, 91, 0.35);
+  border-radius: 16px;
+  padding: 14px 16px;
+  box-shadow: 0 4px 12px rgba(70, 75, 41, 0.08);
+}
+
+.wish-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.wish-name {
+  font-weight: 700;
+  color: var(--olive);
+}
+
+.wish-nick {
+  font-size: 12.5px;
+  font-style: italic;
+  color: rgba(74, 79, 47, 0.7);
+}
+
+.wish-content {
+  margin: 6px 0 8px;
+  font-size: 14.5px;
+  line-height: 1.6;
+}
+
+.wish-time {
+  font-size: 11.5px;
+  color: rgba(74, 79, 47, 0.6);
+}
+
+.wishes-overlay {
+  align-items: stretch;
+}
+
+.wishes-modal {
+  width: min(100%, 520px);
+  margin: 0 auto;
+  padding: 64px 16px 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.wishes-modal-title {
+  font-family: 'Lora', Georgia, serif;
+  color: #fdf2d1;
+  text-align: center;
+  font-size: 18px;
+  letter-spacing: 2px;
+  margin: 0 0 16px;
+}
+
+.wishes-modal-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 12px;
+  font-family: 'Lora', Georgia, serif;
+  color: var(--ink);
+}
+
+/* ============================================================
+   9) FORM XÁC NHẬN THAM DỰ
+   ============================================================ */
+.rsvp-wrap {
+  text-align: center;
+}
+
+.rsvp-intro {
+  font-size: 15.5px;
+  line-height: 1.7;
+  margin: 0 0 18px;
+}
+
+.rsvp-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rsvp-field {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 11px 16px;
+  background: rgba(255, 255, 255, 0.35);
+  border: 1.5px solid var(--olive);
+  border-radius: 20px;
+  color: var(--ink);
+  font-family: 'Lora', Georgia, serif;
+  font-size: 15.5px;
+  outline: none;
+  transition: box-shadow 200ms ease, background 200ms ease;
+}
+
+.rsvp-field::placeholder {
+  color: rgba(74, 79, 47, 0.75);
+}
+
+.rsvp-field:focus {
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 0 0 3px rgba(90, 97, 55, 0.18);
+}
+
+.rsvp-field:disabled {
+  opacity: 0.5;
+}
+
+.rsvp-textarea {
+  min-height: 104px;
+  resize: vertical;
+  font-family: 'Lora', Georgia, serif;
+}
+
+select.rsvp-field {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 38px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%235a6137'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 10px 6px;
+}
+
+.rsvp-submit {
+  margin-top: 4px;
+  padding: 13px 16px;
+  background: var(--olive);
+  border: 1.5px solid var(--olive);
+  border-radius: 22px;
+  color: #fff;
+  font-family: 'Lora', Georgia, serif;
+  font-size: 17px;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: background 200ms ease, transform 150ms ease;
+}
+
+.rsvp-submit:hover:not(:disabled) {
+  background: var(--olive-dark);
+  transform: translateY(-1px);
+}
+
+.rsvp-submit:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.rsvp-error {
+  color: #a83a42;
+  font-size: 13.5px;
+}
+
+.rsvp-sent {
+  padding: 24px 12px;
+}
+
+.rsvp-sent-icon {
+  font-size: 36px;
+  color: #a83a42;
+  margin-bottom: 6px;
+}
+
+.rsvp-sent p {
+  font-size: 15.5px;
+  line-height: 1.7;
+  margin: 0 0 10px;
+}
+
+.rsvp-link {
+  background: none;
+  border: none;
+  color: var(--olive);
+  text-decoration: underline;
+  font-family: 'Lora', Georgia, serif;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* ============================================================
+   10) LỜI CẢM ƠN
+   ============================================================ */
+.section-thanks {
+  padding-bottom: 80px;
+}
+
+.thanks-photo {
+  width: min(78vw, 300px);
+  aspect-ratio: 4 / 5;
+  margin: 0 auto 24px;
+  border-radius: 150px 150px 28px 28px;
+  overflow: hidden;
+  background: linear-gradient(160deg, #d9d3b8, #b9bf95);
+  box-shadow: 0 14px 32px rgba(70, 75, 41, 0.3);
+}
+
+.thanks-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.thanks-script {
+  font-family: 'Great Vibes', cursive;
+  font-size: 48px;
+  color: var(--olive);
+  line-height: 1.1;
+}
+
+.thanks-text {
+  font-size: 15px;
+  line-height: 1.8;
+  margin: 10px 0 18px;
+}
+
+.thanks-names {
+  font-family: 'Great Vibes', cursive;
+  font-size: 30px;
+  color: var(--gold);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
 @media (min-width: 500px) {
   .names-row {
     flex-direction: row;
@@ -622,5 +1448,181 @@ body {
   .amp {
     margin: 0;
     font-size: 20px;
+  }
+}
+
+/* ============================================================
+   THEME NỀN TRÁI TIM RƠI (burgundy) CHO TOÀN BỘ TRANG
+   Ghi đè các màu giấy kem ở trên
+   ============================================================ */
+:root {
+  --olive: #f3d69b;
+  --olive-dark: #fff8eb;
+  --ink: #f4efe6;
+  --gold: #d9c48a;
+}
+
+.content-flow {
+  background: transparent;
+  background-image: none;
+  box-shadow: none;
+}
+
+.page-section+.page-section {
+  border-top-color: rgba(217, 196, 138, 0.18);
+}
+
+/* Lịch */
+.calendar-card {
+  background: rgba(255, 250, 243, 0.06);
+  border-color: rgba(217, 196, 138, 0.35);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.45);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.calendar-grid-header {
+  border-bottom-color: rgba(217, 196, 138, 0.2);
+}
+
+.heart-svg {
+  fill: rgba(217, 196, 138, 0.25);
+  stroke: #ffd700;
+  stroke-width: 2;
+  filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.8));
+}
+
+/* Nút */
+.btn-olive,
+.rsvp-submit {
+  background: #d9c48a;
+  border-color: #d9c48a;
+  color: #380a0e;
+}
+
+.rsvp-submit:hover:not(:disabled) {
+  background: #f3d69b;
+}
+
+.btn-outline {
+  border-color: #d9c48a;
+  color: #f3d69b;
+}
+
+.btn-outline:hover {
+  background: #d9c48a;
+  color: #380a0e;
+}
+
+/* Cô dâu chú rể */
+.person-photo {
+  border: 2px solid rgba(217, 196, 138, 0.5);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
+}
+
+.person-home,
+.event-lunar,
+.timeline-time span,
+.wish-nick,
+.wish-time {
+  color: rgba(244, 239, 230, 0.7);
+}
+
+/* Thẻ sự kiện */
+.event-card {
+  background: rgba(255, 250, 243, 0.08);
+  border: 1px solid rgba(217, 196, 138, 0.3);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.event-map-toggle {
+  border-color: rgba(217, 196, 138, 0.45);
+}
+
+/* Dresscode */
+.dress-circle {
+  border-color: #fff8eb;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.5);
+}
+
+/* Timeline */
+.timeline-dot {
+  background: #380a0e;
+  border-color: #d9c48a;
+  box-shadow: 0 0 0 4px rgba(217, 196, 138, 0.15);
+}
+
+/* Ảnh */
+.gallery-item,
+.thanks-photo {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Countdown */
+.countdown-box {
+  background: rgba(255, 250, 243, 0.08);
+  border: 1px solid rgba(217, 196, 138, 0.4);
+  color: #fff8eb;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4);
+}
+
+.countdown-label {
+  color: #d9c48a;
+}
+
+/* Lời nhắn */
+.wish-item {
+  background: rgba(255, 250, 243, 0.07);
+  border-color: rgba(217, 196, 138, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Form */
+.rsvp-field {
+  background: rgba(255, 250, 243, 0.06);
+  border-color: #d9c48a;
+  color: #f4efe6;
+}
+
+.rsvp-field::placeholder {
+  color: rgba(244, 239, 230, 0.7);
+}
+
+.rsvp-field:focus {
+  background: rgba(255, 250, 243, 0.12);
+  box-shadow: 0 0 0 3px rgba(217, 196, 138, 0.25);
+}
+
+.rsvp-field option {
+  background: #fff8eb;
+  color: #380a0e;
+}
+
+select.rsvp-field {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23d9c48a'/%3E%3C/svg%3E");
+}
+
+.rsvp-error {
+  color: #ffa3aa;
+}
+
+.rsvp-sent-icon {
+  color: #f3a0a8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .reveal,
+  .calendar-card {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .calendar-cell {
+    opacity: 1;
+    transform: none;
   }
 }
