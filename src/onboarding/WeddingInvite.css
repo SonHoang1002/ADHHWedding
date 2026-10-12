@@ -346,7 +346,7 @@ body {
 
 .overlay-names {
   font-family: 'Great Vibes', cursive;
-  font-size: clamp(38px, 9vw, 64px);
+  font-size: clamp(38px, 9vw, 48px);
   color: #fff8eb;
   white-space: nowrap;
   line-height: 1.2;
@@ -1612,6 +1612,71 @@ select.rsvp-field {
   color: #f3a0a8;
 }
 
+/* ============================================================
+   NÚT NHẠC (góc trên bên phải)
+   ============================================================ */
+.music-btn {
+  position: fixed;
+  top: calc(env(safe-area-inset-top, 0px) + 12px);
+  right: 12px;
+  z-index: 50;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.55));
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 150ms ease, opacity 250ms ease;
+  opacity: 0.75;
+}
+
+.music-btn:hover {
+  transform: scale(1.06);
+}
+
+.music-btn:active {
+  transform: scale(0.94);
+}
+
+.music-btn.is-playing {
+  opacity: 1;
+}
+
+.music-disc {
+  display: block;
+  width: 100%;
+  height: 100%;
+  animation: musicSpin 4s linear infinite;
+  animation-play-state: paused;
+}
+
+.music-btn.is-playing .music-disc {
+  animation-play-state: running;
+}
+
+@keyframes musicSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Gạch chéo khi đang tắt nhạc */
+.music-slash {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 34px;
+  height: 2px;
+  border-radius: 2px;
+  background: #f3d69b;
+  box-shadow: 0 0 0 1px rgba(42, 7, 9, 0.8);
+  transform: translate(-50%, -50%) rotate(-45deg);
+  pointer-events: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
 
   .reveal,
@@ -1624,5 +1689,9 @@ select.rsvp-field {
   .calendar-cell {
     opacity: 1;
     transform: none;
+  }
+
+  .music-disc {
+    animation: none;
   }
 }
