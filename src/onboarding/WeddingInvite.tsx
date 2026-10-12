@@ -417,7 +417,6 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
   groom = "Huy Hiếu",
   bride = "Ánh Dương",
   date = "12.12.2026",
-  location = "Hải Dương",
   onComplete = () => {},
   onSubmitRsvp,
   wishes: initialWishes = loiNhanMau,
@@ -429,13 +428,35 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
   const [carouselIndex, setCarouselIndex] = useState<number | null>(null);
   const [wishes, setWishes] = useState<LoiNhan[]>(initialWishes);
   const [wishesOpen, setWishesOpen] = useState<boolean>(false);
+  const [musicPlaying, setMusicPlaying] = useState<boolean>(false);
 
   const calendarRef = useRef<HTMLElement>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const userPausedRef = useRef<boolean>(false); // true khi khách chủ động tắt nhạc
   const timers = useRef<NodeJS.Timeout[]>([]);
 
   useEffect(() => {
     return () => {
       timers.current.forEach(clearTimeout);
+    };
+  }, []);
+
+  // Nhạc luôn chạy liên tục: nếu bị hệ thống ngắt (khoá màn hình, đổi tab...)
+  // thì tự phát lại khi quay về, trừ khi khách chủ động tắt
+  useEffect(() => {
+    const resume = (): void => {
+      const audio = audioRef.current;
+      if (audio && audio.paused && !userPausedRef.current && !document.hidden) {
+        audio.play().catch(() => {});
+      }
+    };
+    document.addEventListener("visibilitychange", resume);
+    window.addEventListener("focus", resume);
+    window.addEventListener("pageshow", resume);
+    return () => {
+      document.removeEventListener("visibilitychange", resume);
+      window.removeEventListener("focus", resume);
+      window.removeEventListener("pageshow", resume);
     };
   }, []);
 
@@ -447,6 +468,8 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
   const handleToggle = (): void => {
     if (open) return;
     setOpen(true);
+    userPausedRef.current = false;
+    audioRef.current?.play().catch(() => {});
 
     const fadeEnvelopeTimer = setTimeout(() => {
       setEnvelopeGone(true);
@@ -462,6 +485,18 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
       timers.current.push(textTimer);
     }, 600);
     timers.current.push(fadeEnvelopeTimer);
+  };
+
+  const toggleMusic = (): void => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (audio.paused) {
+      userPausedRef.current = false;
+      audio.play().catch(() => setMusicPlaying(false));
+    } else {
+      userPausedRef.current = true;
+      audio.pause();
+    }
   };
 
   const handleScrollDown = (): void => {
@@ -503,6 +538,42 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
 
   return (
     <div className={`wedding-app-root${envelopeGone ? " is-scrollable" : ""}`}>
+      {/* ================= NHẠC NỀN ================= */}
+      <audio
+        ref={audioRef}
+        src="/audio/i_do.mp3"
+        loop
+        preload="auto"
+        onPlay={() => setMusicPlaying(true)}
+        onPause={() => setMusicPlaying(false)}
+        onEnded={(e) => {
+          // dự phòng nếu trình duyệt không lặp: phát lại từ đầu
+          e.currentTarget.currentTime = 0;
+          e.currentTarget.play().catch(() => {});
+        }}
+      />
+      <button
+        type="button"
+        className={`music-btn${musicPlaying ? " is-playing" : ""}`}
+        onClick={toggleMusic}
+        aria-label={musicPlaying ? "Tắt nhạc" : "Bật nhạc"}
+        aria-pressed={musicPlaying}
+        title={musicPlaying ? "Tắt nhạc" : "Bật nhạc"}
+      >
+        <svg className="music-disc" viewBox="0 0 48 48" aria-hidden="true">
+          <circle cx="24" cy="24" r="22" fill="#2a0709" stroke="#d9c48a" strokeWidth="1.5" />
+          <circle cx="24" cy="24" r="17" fill="none" stroke="rgba(217,196,138,0.35)" strokeWidth="0.8" />
+          <circle cx="24" cy="24" r="12.5" fill="none" stroke="rgba(217,196,138,0.25)" strokeWidth="0.8" />
+          <circle cx="24" cy="24" r="8.5" fill="#6e1a20" />
+          <path
+            d="M26.5 15.5v10.2a3.2 3.2 0 1 1-1.6-2.8V18.6l-5 1.2v7.6a3.2 3.2 0 1 1-1.6-2.8v-8.4z"
+            fill="#f3d69b"
+            transform="translate(3 2) scale(0.78)"
+          />
+        </svg>
+        {!musicPlaying && <span className="music-slash" />}
+      </button>
+
       {/* Background trái tim lơ lửng */}
       <div className="background-hearts-layer">
         {[...Array(12)].map((_, i) => (
@@ -576,14 +647,12 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
               </div>
               <div className="overlay-divider" />
               <div className="overlay-date">{date}</div>
-              <div className="overlay-location">{location}</div>
-
-              <button className="scroll-down-hint" onClick={handleScrollDown} title="Cuộn xuống xem lịch">
+              {/* <button className="scroll-down-hint" onClick={handleScrollDown} title="Cuộn xuống xem lịch">
                 <span>LỊCH ĐÁM CƯỚI</span>
                 <svg className="arrow-down-icon" viewBox="0 0 24 24">
                   <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z" fill="currentColor" />
                 </svg>
-              </button>
+              </button> */}
             </div>
           </section>
 
