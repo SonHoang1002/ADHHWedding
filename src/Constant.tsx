@@ -13,7 +13,7 @@ export const chuRe = {
   ten: "Huy Hiếu",
   tenDayDu: "Phạm Huy Hiếu",
   bo: "Phạm Huy Luật",
-  me: "Dương Thị Hoan",
+  me: "Dương Thị Hệ",
   queQuan: "Vĩnh Yên, Phú Thọ",
   anh: "/groom.jpg",
 };
@@ -30,17 +30,17 @@ export const coDau = {
 export const leAnHoi = {
   ngayDuongLich: "29/11/2026",
   ngayAmLich: "Tức 21/10 năm Bính Ngọ",
-  thoiGian: "8h00 – 9h00",
+  thoiGian: "9h00 – 11h00",
   diaDiem: "Tại nhà gái: 88 Mạc Đĩnh Chi, Lê Thanh Nghị, Hải Phòng",
 };
 
 export const leVuQuy = {
-  thoiGian: "7h00 – 8h00",
+  thoiGian: "7h00 – 8h30",
   diaDiem: "Tại nhà gái: 88 Mạc Đĩnh Chi, Lê Thanh Nghị, Hải Phòng",
 };
 
 export const leThanhHon = {
-  thoiGian: "10h30 – 11h30",
+  thoiGian: "10h – 11h30",
   diaDiem: "Tại nhà trai: 11 ngõ 4 Lam Sơn, Vĩnh Yên, Phú Thọ",
 };
 
@@ -58,13 +58,14 @@ export const leCuoi = {
 };
 
 export const lichTrinhLeCuoi = [
-  { thoiGian: "6h30", suKien: "Đón khách tại nhà gái" },
-  { thoiGian: "7h00", suKien: "Lễ Vu Quy tại nhà gái" },
-  { thoiGian: "8h00", suKien: "Nhà trai đón dâu" },
+  { thoiGian: "5h00", suKien: "Khởi hành đi đón dâu" },
+  { thoiGian: "7h00", suKien: "Đón khách tại nhà gái" },
+  { thoiGian: "7h30", suKien: "Lễ Vu Quy tại nhà gái" },
+  { thoiGian: "8h20", suKien: "Nhà trai đón dâu" },
   { thoiGian: "10h00", suKien: "Đón khách tại nhà trai" },
-  { thoiGian: "10h30", suKien: "Lễ Thành Hôn tại nhà trai" },
+  { thoiGian: "11h00", suKien: "Lễ Thành Hôn" },
   { thoiGian: "11h30", suKien: "Khai tiệc" },
-  { thoiGian: "12h00", suKien: "Chụp photobooth" },
+  { thoiGian: "10h00-16h00", suKien: "Chụp photobooth" },
 ];
 
 // ===== Dữ liệu dùng cho các thẻ "Ngày trọng đại" =====
@@ -127,10 +128,10 @@ export const danhSachSuKien: SuKienCard[] = [
 
 // ===== Dresscode =====
 export const dresscode = [
-  { mau: "#5a6137", ten: "Xanh olive" },
-  { mau: "#a8ad84", ten: "Xanh sage" },
-  { mau: "#e8dcc4", ten: "Kem" },
-  { mau: "#7a2a30", ten: "Đỏ rượu" },
+ { mau: "#f5f5dc", ten: "Be" },
+  { mau: "#8b5a2b", ten: "Nâu" },
+  { mau: "#f4c430", ten: "Vàng" },
+  { mau: "#f4c2c2", ten: "Hồng" },
 ];
 
 // ===== Thư viện ảnh =====

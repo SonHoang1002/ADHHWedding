@@ -542,7 +542,7 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
       {/* ================= NHẠC NỀN ================= */}
       <audio
         ref={audioRef}
-        src="/audio/i_do.mp3"
+        src="/audio/wedding_audio.mp3"
         loop
         preload="auto"
         onPlay={() => setMusicPlaying(true)}
@@ -566,11 +566,14 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
           <circle cx="24" cy="24" r="17" fill="none" stroke="rgba(217,196,138,0.35)" strokeWidth="0.8" />
           <circle cx="24" cy="24" r="12.5" fill="none" stroke="rgba(217,196,138,0.25)" strokeWidth="0.8" />
           <circle cx="24" cy="24" r="8.5" fill="#6e1a20" />
-          <path
-            d="M26.5 15.5v10.2a3.2 3.2 0 1 1-1.6-2.8V18.6l-5 1.2v7.6a3.2 3.2 0 1 1-1.6-2.8v-8.4z"
-            fill="#f3d69b"
-            transform="translate(3 2) scale(0.78)"
-          />
+          {/* Nốt nhạc đôi, đã căn đúng tâm đĩa (24,24) */}
+          <g fill="#f3d69b" transform="translate(24 24) scale(0.82) translate(-23.75 -24.92)">
+            <ellipse cx="19" cy="31" rx="3.5" ry="2.6" transform="rotate(-20 19 31)" />
+            <ellipse cx="28.5" cy="28.6" rx="3.5" ry="2.6" transform="rotate(-20 28.5 28.6)" />
+            <rect x="21.4" y="17.6" width="1.5" height="13" />
+            <rect x="30.9" y="15.2" width="1.5" height="13" />
+            <polygon points="21.4,17.6 32.4,15.2 32.4,19.2 21.4,21.6" />
+          </g>
         </svg>
         {!musicPlaying && <span className="music-slash" />}
       </button>
