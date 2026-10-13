@@ -1,9 +1,5 @@
-import { FC, ReactElement, useState } from "react";
-import InviteHome, { InviteKind } from "./invites/InviteHome";
-import EnvelopeInvite from "./invites/EnvelopeInvite";
-import MinimalInvite from "./invites/MinimalInvite";
-import FloralInvite from "./invites/FloralInvite";
-import PinkInvite from "./invites/PinkInvite";
+import { FC, ReactElement } from "react";
+
 import "./invites/invites.css";
 import WeddingInvite from "./onboarding/WeddingInvite";
 

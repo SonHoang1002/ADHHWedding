@@ -437,6 +437,7 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
 
   useEffect(() => {
     return () => {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       timers.current.forEach(clearTimeout);
     };
   }, []);
@@ -499,9 +500,9 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
     }
   };
 
-  const handleScrollDown = (): void => {
-    calendarRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  // const handleScrollDown = (): void => {
+  //   calendarRef.current?.scrollIntoView({ behavior: "smooth" });
+  // };
 
   /* ----- Lịch ----- */
   const daysOfWeek = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
