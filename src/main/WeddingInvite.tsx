@@ -19,10 +19,38 @@ import {
   loiCamOn,
   loiNhanMau,
   thoiDiemCuoi,
-  thuVienAnh,
   LoiNhan,
   SuKienCard,
 } from "../Constant";
+
+/* ============================================================
+   DANH SÁCH ẢNH (quản lý tập trung tại đây)
+   Ảnh nằm trong public/photos. Muốn đổi ảnh nào chỉ cần sửa path ở đây.
+   ============================================================ */
+const PHOTO_DIR = "/photos";
+
+const IMAGES = {
+  // Ảnh bìa sau khi mở thiệp
+  hero: `${PHOTO_DIR}/start_image_background.jpg`,
+  // Chú rể & Cô dâu
+  groom: `${PHOTO_DIR}/groom.jpg`,
+  bride: `${PHOTO_DIR}/bride.jpg`,
+  // Ảnh cưới (dùng cho album, thẻ sự kiện, lời cảm ơn)
+  wedding: [
+    `${PHOTO_DIR}/IMG_20261016_210715.jpg`,
+    `${PHOTO_DIR}/IMG_20261016_210752.jpg`,
+    `${PHOTO_DIR}/IMG_20261016_210754.jpg`,
+    `${PHOTO_DIR}/IMG_20261016_210802.jpg`,
+    `${PHOTO_DIR}/IMG_20261016_210804.jpg`,
+  ],
+};
+
+// Album: 5 ảnh cưới + ảnh cô dâu, chú rể (tạm thời, có thể lặp)
+const GALLERY_IMAGES: string[] = [...IMAGES.wedding, IMAGES.bride, IMAGES.groom];
+// Thẻ sự kiện: xoay vòng các ảnh cưới
+const EVENT_IMAGES: string[] = IMAGES.wedding;
+// Lời cảm ơn
+const THANKS_IMAGE: string = IMAGES.wedding[4];
 
 /* ============================================================
    TIỆN ÍCH
@@ -199,7 +227,7 @@ const GalleryCarousel: FC<{ images: string[]; startIndex: number; onClose: () =>
       <div className="carousel-viewport" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
         <div className="carousel-track" style={{ transform: `translateX(-${index * 100}%)` }}>
           {images.map((src, i) => (
-            <div className="carousel-slide" key={src}>
+            <div className="carousel-slide" key={`${src}-${i}`}>
               {Math.abs(i - index) <= 1 && <SafeImg src={src} alt={`Ảnh cưới ${i + 1}`} />}
             </div>
           ))}
@@ -432,6 +460,7 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
 
   const calendarRef = useRef<HTMLElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const openedRef = useRef<boolean>(false); // true sau khi khách đã mở thiệp
   const userPausedRef = useRef<boolean>(false); // true khi khách chủ động tắt nhạc
   const timers = useRef<NodeJS.Timeout[]>([]);
 
@@ -442,12 +471,19 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
     };
   }, []);
 
-  // Nhạc luôn chạy liên tục: nếu bị hệ thống ngắt (khoá màn hình, đổi tab...)
-  // thì tự phát lại khi quay về, trừ khi khách chủ động tắt
+  // Sau khi mở thiệp, nhạc chạy liên tục: nếu bị hệ thống ngắt (khoá màn hình, đổi tab...)
+  // thì tự phát lại khi quay về, trừ khi khách chủ động tắt.
+  // Trước khi mở thiệp thì tuyệt đối không phát.
   useEffect(() => {
     const resume = (): void => {
       const audio = audioRef.current;
-      if (audio && audio.paused && !userPausedRef.current && !document.hidden) {
+      if (
+        audio &&
+        openedRef.current &&
+        audio.paused &&
+        !userPausedRef.current &&
+        !document.hidden
+      ) {
         audio.play().catch(() => {});
       }
     };
@@ -469,6 +505,7 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
   const handleToggle = (): void => {
     if (open) return;
     setOpen(true);
+    openedRef.current = true;
     userPausedRef.current = false;
     audioRef.current?.play().catch(() => {});
 
@@ -500,10 +537,6 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
     }
   };
 
-  // const handleScrollDown = (): void => {
-  //   calendarRef.current?.scrollIntoView({ behavior: "smooth" });
-  // };
-
   /* ----- Lịch ----- */
   const daysOfWeek = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
   // Tháng 12/2026 bắt đầu vào Thứ Ba
@@ -517,7 +550,13 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
 
   /* ----- Ảnh ----- */
   const galleryAnims: Anim[] = ["fade", "left", "right", "zoom", "rotate", "flip"];
-  const previewImages = thuVienAnh.slice(0, 6);
+  const previewImages = GALLERY_IMAGES.slice(0, 6);
+
+  // Gán ảnh cho các thẻ sự kiện (xoay vòng nếu số sự kiện nhiều hơn số ảnh)
+  const events: SuKienCard[] = danhSachSuKien.map((item, i) => ({
+    ...item,
+    anh: EVENT_IMAGES[i % EVENT_IMAGES.length],
+  }));
 
   /* ----- RSVP ----- */
   const handleRsvp = async (data: RsvpData): Promise<void> => {
@@ -553,30 +592,34 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
           e.currentTarget.play().catch(() => {});
         }}
       />
-      <button
-        type="button"
-        className={`music-btn${musicPlaying ? " is-playing" : ""}`}
-        onClick={toggleMusic}
-        aria-label={musicPlaying ? "Tắt nhạc" : "Bật nhạc"}
-        aria-pressed={musicPlaying}
-        title={musicPlaying ? "Tắt nhạc" : "Bật nhạc"}
-      >
-        <svg className="music-disc" viewBox="0 0 48 48" aria-hidden="true">
-          <circle cx="24" cy="24" r="22" fill="#2a0709" stroke="#d9c48a" strokeWidth="1.5" />
-          <circle cx="24" cy="24" r="17" fill="none" stroke="rgba(217,196,138,0.35)" strokeWidth="0.8" />
-          <circle cx="24" cy="24" r="12.5" fill="none" stroke="rgba(217,196,138,0.25)" strokeWidth="0.8" />
-          <circle cx="24" cy="24" r="8.5" fill="#6e1a20" />
-          {/* Nốt nhạc đôi, đã căn đúng tâm đĩa (24,24) */}
-          <g fill="#f3d69b" transform="translate(24 24) scale(0.82) translate(-23.75 -24.92)">
-            <ellipse cx="19" cy="31" rx="3.5" ry="2.6" transform="rotate(-20 19 31)" />
-            <ellipse cx="28.5" cy="28.6" rx="3.5" ry="2.6" transform="rotate(-20 28.5 28.6)" />
-            <rect x="21.4" y="17.6" width="1.5" height="13" />
-            <rect x="30.9" y="15.2" width="1.5" height="13" />
-            <polygon points="21.4,17.6 32.4,15.2 32.4,19.2 21.4,21.6" />
-          </g>
-        </svg>
-        {!musicPlaying && <span className="music-slash" />}
-      </button>
+
+      {/* Nút nhạc chỉ hiện sau khi đã mở thiệp */}
+      {open && (
+        <button
+          type="button"
+          className={`music-btn${musicPlaying ? " is-playing" : ""}`}
+          onClick={toggleMusic}
+          aria-label={musicPlaying ? "Tắt nhạc" : "Bật nhạc"}
+          aria-pressed={musicPlaying}
+          title={musicPlaying ? "Tắt nhạc" : "Bật nhạc"}
+        >
+          <svg className="music-disc" viewBox="0 0 48 48" aria-hidden="true">
+            <circle cx="24" cy="24" r="22" fill="#2a0709" stroke="#d9c48a" strokeWidth="1.5" />
+            <circle cx="24" cy="24" r="17" fill="none" stroke="rgba(217,196,138,0.35)" strokeWidth="0.8" />
+            <circle cx="24" cy="24" r="12.5" fill="none" stroke="rgba(217,196,138,0.25)" strokeWidth="0.8" />
+            <circle cx="24" cy="24" r="8.5" fill="#6e1a20" />
+            {/* Nốt nhạc đôi, đã căn đúng tâm đĩa (24,24) */}
+            <g fill="#f3d69b" transform="translate(24 24) scale(0.82) translate(-23.75 -24.92)">
+              <ellipse cx="19" cy="31" rx="3.5" ry="2.6" transform="rotate(-20 19 31)" />
+              <ellipse cx="28.5" cy="28.6" rx="3.5" ry="2.6" transform="rotate(-20 28.5 28.6)" />
+              <rect x="21.4" y="17.6" width="1.5" height="13" />
+              <rect x="30.9" y="15.2" width="1.5" height="13" />
+              <polygon points="21.4,17.6 32.4,15.2 32.4,19.2 21.4,21.6" />
+            </g>
+          </svg>
+          {!musicPlaying && <span className="music-slash" />}
+        </button>
+      )}
 
       {/* Background trái tim lơ lửng */}
       <div className="background-hearts-layer">
@@ -641,7 +684,7 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
           <section className="section-photo-hero">
             <img
               className={`center-burst-image${showImage ? " is-visible" : ""}`}
-              src="/start_image_background.jpg"
+              src={IMAGES.hero}
               alt="Wedding Background"
             />
 
@@ -651,12 +694,6 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
               </div>
               <div className="overlay-divider" />
               <div className="overlay-date">{date}</div>
-              {/* <button className="scroll-down-hint" onClick={handleScrollDown} title="Cuộn xuống xem lịch">
-                <span>LỊCH ĐÁM CƯỚI</span>
-                <svg className="arrow-down-icon" viewBox="0 0 24 24">
-                  <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z" fill="currentColor" />
-                </svg>
-              </button> */}
             </div>
           </section>
 
@@ -713,7 +750,7 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
               <div className="person-list">
                 <Reveal className="person-card" anim="left">
                   <div className="person-photo">
-                    <SafeImg src={chuRe.anh} alt={chuRe.tenDayDu} />
+                    <SafeImg src={IMAGES.groom} alt={chuRe.tenDayDu} />
                   </div>
                   <div className="person-role">Chú rể</div>
                   <h3 className="person-name">{chuRe.tenDayDu}</h3>
@@ -727,7 +764,7 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
 
                 <Reveal className="person-card" anim="right" delay={120}>
                   <div className="person-photo">
-                    <SafeImg src={coDau.anh} alt={coDau.tenDayDu} />
+                    <SafeImg src={IMAGES.bride} alt={coDau.tenDayDu} />
                   </div>
                   <div className="person-role">Cô dâu</div>
                   <h3 className="person-name">{coDau.tenDayDu}</h3>
@@ -745,7 +782,7 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
             <section className="page-section section-events">
               <SectionTitle sub="Trân trọng kính mời" title="Ngày trọng đại" />
               <div className="event-list">
-                {danhSachSuKien.map((item, i) => (
+                {events.map((item, i) => (
                   <EventCard key={item.id} item={item} index={i} />
                 ))}
               </div>
@@ -787,7 +824,7 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
               <div className="gallery-grid">
                 {previewImages.map((src, i) => (
                   <Reveal
-                    key={src}
+                    key={`${src}-${i}`}
                     anim={galleryAnims[i % galleryAnims.length]}
                     delay={(i % 2) * 120}
                     className="gallery-item"
@@ -804,7 +841,7 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
                 ))}
               </div>
               <button type="button" className="btn-outline gallery-all" onClick={() => setCarouselIndex(0)}>
-                Xem tất cả ({thuVienAnh.length} ảnh)
+                Xem tất cả ({GALLERY_IMAGES.length} ảnh)
               </button>
             </section>
 
@@ -844,7 +881,7 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
             {/* ===== 10) LỜI CẢM ƠN ===== */}
             <section className="page-section section-thanks">
               <Reveal anim="zoom" className="thanks-photo">
-                <SafeImg src="/thanks.jpg" alt="Lời cảm ơn" />
+                <SafeImg src={THANKS_IMAGE} alt="Lời cảm ơn" />
               </Reveal>
               <Reveal className="thanks-body" delay={120}>
                 <div className="thanks-script">Cảm ơn</div>
@@ -859,7 +896,7 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
       )}
 
       {carouselIndex !== null && (
-        <GalleryCarousel images={thuVienAnh} startIndex={carouselIndex} onClose={() => setCarouselIndex(null)} />
+        <GalleryCarousel images={GALLERY_IMAGES} startIndex={carouselIndex} onClose={() => setCarouselIndex(null)} />
       )}
       {wishesOpen && <WishesModal wishes={sortedWishes} onClose={() => setWishesOpen(false)} />}
     </div>

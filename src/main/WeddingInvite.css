@@ -1613,7 +1613,7 @@ select.rsvp-field {
 }
 
 /* ============================================================
-   NÚT NHẠC (góc trên bên phải)
+   NÚT NHẠC (góc trên bên phải) - chỉ render sau khi mở thiệp
    ============================================================ */
 .music-btn {
   position: fixed;
@@ -1631,6 +1631,17 @@ select.rsvp-field {
   -webkit-tap-highlight-color: transparent;
   transition: transform 150ms ease, opacity 250ms ease;
   opacity: 0.75;
+  /* Hiện dần khi vừa xuất hiện. Dùng "backwards" (không phải "both")
+     để sau khi chạy xong, opacity của .is-playing vẫn có hiệu lực */
+  animation: musicIn 500ms ease backwards;
+}
+
+/* Chỉ có keyframe "from": trạng thái cuối lấy từ opacity/transform thực tế */
+@keyframes musicIn {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
 }
 
 .music-btn:hover {
@@ -1691,7 +1702,8 @@ select.rsvp-field {
     transform: none;
   }
 
-  .music-disc {
+  .music-disc,
+  .music-btn {
     animation: none;
   }
 }
