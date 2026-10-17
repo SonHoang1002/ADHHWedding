@@ -43,6 +43,11 @@ const IMAGES = {
     `${PHOTO_DIR}/IMG_20261016_210802.jpg`,
     `${PHOTO_DIR}/IMG_20261016_210804.jpg`,
   ],
+  // Mã QR mừng cưới (đặt file vào public/photos, có thể đổi đuôi .png/.jpg tuỳ file thật)
+  qr: {
+    groom: `${PHOTO_DIR}/qr_groom.png`,
+    bride: `${PHOTO_DIR}/qr_bride.png`,
+  },
 };
 
 // Album: 5 ảnh cưới + ảnh cô dâu, chú rể (tạm thời, có thể lặp)
@@ -423,6 +428,101 @@ const RsvpForm: FC<{ onSubmit: (data: RsvpData) => void | Promise<void> }> = ({ 
         {sending ? "ĐANG GỬI..." : "GỬI LỜI NHẮN & XÁC NHẬN"}
       </button>
     </form>
+  );
+};
+
+/* ============================================================
+   PHONG BAO MỪNG CƯỚI + 2 MÃ QR
+   ============================================================ */
+const QR_ITEMS = [
+  { key: "groom", label: "Chú rể", src: IMAGES.qr.groom, file: "qr-chu-re" },
+  { key: "bride", label: "Cô dâu", src: IMAGES.qr.bride, file: "qr-co-dau" },
+];
+
+// Tải ảnh về máy. Nếu không tải được (file thiếu / trình duyệt chặn) thì mở ảnh ở tab mới
+const downloadImage = async (src: string, fileBase: string): Promise<void> => {
+  try {
+    const res = await fetch(src);
+    const blob = await res.blob();
+    if (!res.ok || !blob.type.startsWith("image/")) throw new Error("not an image");
+    const ext = src.split(".").pop() || "png";
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${fileBase}.${ext}`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  } catch {
+    window.open(src, "_blank");
+  }
+};
+
+const QrPic: FC<{ src: string; alt: string }> = ({ src, alt }) => {
+  const [failed, setFailed] = useState<boolean>(false);
+  if (failed) return <span className="gift-qr-empty">QR</span>;
+  return <img src={src} alt={alt} onError={() => setFailed(true)} />;
+};
+
+const GiftEnvelope: FC = () => {
+  const [opened, setOpened] = useState<boolean>(false);
+
+  return (
+    <div className={`gift${opened ? " is-open" : ""}`}>
+      <div className="gift-stage">
+        {/* Lớp sau phong bì: thân + nắp mở */}
+        <div className="gift-layer gift-layer-back">
+          <span className="gift-flap" />
+          <span className="gift-back" />
+        </div>
+
+        {/* 2 thẻ QR: ban đầu chỉ ló ra khỏi phong bì, khi mở thì bay ra giữa */}
+        {QR_ITEMS.map((q, i) => (
+          <div key={q.key} className={`gift-card ${i === 0 ? "gift-card-left" : "gift-card-right"}`}>
+            <div className="gift-qr">
+              <QrPic src={q.src} alt={`Mã QR mừng cưới ${q.label}`} />
+            </div>
+            <div className="gift-card-label">{q.label}</div>
+          </div>
+        ))}
+
+        {/* Lớp trước phong bì: túi + con dấu */}
+        <div className="gift-layer gift-layer-front">
+          <span className="gift-pocket" />
+          <svg className="gift-pocket-line" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            <polyline points="0,30 50,64 100,30" fill="none" stroke="#c9b88f" strokeWidth="1" vectorEffect="non-scaling-stroke" />
+          </svg>
+          <span className="gift-seal">&#10047;</span>
+        </div>
+
+        <button
+          type="button"
+          className="gift-hit"
+          onClick={() => setOpened(true)}
+          disabled={opened}
+          aria-label="Mở phong bao mừng cưới"
+        />
+      </div>
+
+      <p className="gift-hint">Chạm để mở phong bao</p>
+
+      <div className="gift-actions">
+        {QR_ITEMS.map((q) => (
+          <button
+            key={q.key}
+            type="button"
+            className="btn-outline gift-download"
+            onClick={() => downloadImage(q.src, q.file)}
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M11 3h2v10.17l3.59-3.58L18 11l-6 6-6-6 1.41-1.41L11 13.17V3zM5 19h14v2H5z" fill="currentColor" />
+            </svg>
+            Tải mã QR
+          </button>
+        ))}
+      </div>
+    </div>
   );
 };
 
@@ -878,7 +978,15 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
               </Reveal>
             </section>
 
-            {/* ===== 10) LỜI CẢM ƠN ===== */}
+            {/* ===== 10) PHONG BAO MỪNG CƯỚI (2 MÃ QR) ===== */}
+            <section className="page-section section-gift">
+              <SectionTitle sub="Gửi lời chúc & quà mừng" title="Phong bao mừng cưới" />
+              <Reveal anim="up">
+                <GiftEnvelope />
+              </Reveal>
+            </section>
+
+            {/* ===== 11) LỜI CẢM ƠN ===== */}
             <section className="page-section section-thanks">
               <Reveal anim="zoom" className="thanks-photo">
                 <SafeImg src={THANKS_IMAGE} alt="Lời cảm ơn" />

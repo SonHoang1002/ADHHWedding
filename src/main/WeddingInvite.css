@@ -1688,6 +1688,314 @@ select.rsvp-field {
   pointer-events: none;
 }
 
+/* ============================================================
+   PHONG BAO MỪNG CƯỚI + 2 MÃ QR
+   ============================================================ */
+.gift {
+  /* Chiều rộng mỗi thẻ QR: nhỏ gọn, vừa đủ để quét; tự co trên màn hình hẹp */
+  --cw: min(calc((100vw - 52px) / 2), 148px);
+}
+
+.gift-stage {
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  height: 260px;
+  margin: 0 auto;
+  transition: height 700ms cubic-bezier(0.2, 0.8, 0.2, 1) 350ms;
+}
+
+.gift.is-open .gift-stage {
+  height: calc(var(--cw) + 34px);
+}
+
+/* Phong bì tách 2 lớp (sau / trước) để thẻ QR nằm kẹp ở giữa */
+.gift-layer {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: min(100%, 280px);
+  aspect-ratio: 1.5;
+  transform: translateX(-50%);
+  pointer-events: none;
+  transition: transform 600ms ease, opacity 500ms ease;
+}
+
+.gift-layer-back {
+  z-index: 1;
+}
+
+.gift-layer-front {
+  z-index: 3;
+}
+
+.gift.is-open .gift-layer {
+  transform: translate(-50%, 10px);
+  opacity: 0;
+}
+
+.gift-back {
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #d8c9a8, #e8dcc4);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.45);
+}
+
+.gift-flap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  height: 34%;
+  background: #d3c3a0;
+  clip-path: polygon(0 100%, 50% 0, 100% 100%);
+}
+
+.gift-pocket {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #f8f1e3 0%, #eadfc8 100%);
+  clip-path: polygon(0 30%, 50% 64%, 100% 30%, 100% 100%, 0 100%);
+}
+
+.gift-pocket-line {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.gift-seal {
+  position: absolute;
+  top: 64%;
+  left: 50%;
+  display: grid;
+  width: 38px;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  background: linear-gradient(to right bottom, rgb(110, 26, 32), rgb(81, 20, 25), rgb(56, 10, 14));
+  color: #d9c48a;
+  font-size: 17px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.35);
+  transform: translate(-50%, -50%);
+}
+
+/* Thẻ QR */
+.gift-card {
+  --dx: 0px;
+  --rot: 0deg;
+  --s: 0.94;
+  --d: 0ms;
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 45px;
+  box-sizing: border-box;
+  width: var(--cw);
+  padding: 8px 8px 6px;
+  border-radius: 10px;
+  background: #fffaf3;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  transform: translateX(calc(-50% + var(--dx))) rotate(var(--rot)) scale(var(--s));
+  transition:
+    top 900ms cubic-bezier(0.2, 0.8, 0.2, 1) var(--d),
+    transform 900ms cubic-bezier(0.2, 0.8, 0.2, 1) var(--d);
+}
+
+.gift-card-left {
+  --dx: -46px;
+  --rot: -6deg;
+  --dx0: -46px;
+  --rot0: -6deg;
+}
+
+.gift-card-right {
+  --dx: 46px;
+  --rot: 5deg;
+  --dx0: 46px;
+  --rot0: 5deg;
+  --d: 120ms;
+}
+
+/* Gợi ý nhẹ: rê chuột thì thẻ nhô lên một chút */
+.gift:not(.is-open) .gift-stage:hover .gift-card {
+  top: 38px;
+}
+
+.gift.is-open .gift-card {
+  --rot: 0deg;
+  --s: 1;
+  top: 0;
+  animation: giftJump 1000ms var(--d) both;
+}
+
+.gift.is-open .gift-card-left {
+  --dx: calc(var(--cw) / -2 - 6px);
+}
+
+.gift.is-open .gift-card-right {
+  --dx: calc(var(--cw) / 2 + 6px);
+}
+
+/* Thẻ QR nhảy vọt ra khỏi phong bì, rơi xuống vị trí đích rồi nảy nhẹ */
+@keyframes giftJump {
+  0% {
+    top: 45px;
+    transform: translateX(calc(-50% + var(--dx0))) rotate(var(--rot0)) scale(0.94);
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1);
+  }
+
+  42% {
+    top: -26px;
+    transform: translateX(calc(-50% + (var(--dx0) + var(--dx)) / 2)) rotate(calc(var(--rot0) * -0.6)) scale(1.1);
+    animation-timing-function: cubic-bezier(0.55, 0, 0.9, 0.5);
+  }
+
+  74% {
+    top: 0;
+    transform: translateX(calc(-50% + var(--dx))) rotate(0deg) scale(1);
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.4, 1);
+  }
+
+  88% {
+    top: -7px;
+    transform: translateX(calc(-50% + var(--dx))) rotate(0deg) scale(1);
+    animation-timing-function: cubic-bezier(0.55, 0, 0.9, 0.5);
+  }
+
+  100% {
+    top: 0;
+    transform: translateX(calc(-50% + var(--dx))) rotate(0deg) scale(1);
+  }
+}
+
+.gift-qr {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.gift-qr img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.gift-qr-empty {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 22px;
+  letter-spacing: 3px;
+  color: rgba(56, 10, 14, 0.25);
+}
+
+.gift-card-label {
+  padding: 6px 0 2px;
+  text-align: center;
+  font-family: 'Lora', Georgia, serif;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #6e1a20;
+}
+
+/* Vùng bấm mở phong bao */
+.gift-hit {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.gift-hit:disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+.gift-hint {
+  max-height: 40px;
+  margin: 16px 0 0;
+  overflow: hidden;
+  font-size: 12.5px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  animation: giftHint 2s ease-in-out infinite;
+  transition: opacity 300ms ease, max-height 400ms ease, margin 400ms ease;
+}
+
+.gift.is-open .gift-hint {
+  max-height: 0;
+  margin: 0;
+  opacity: 0;
+  animation: none;
+}
+
+@keyframes giftHint {
+
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Nút tải mã QR: nằm ngay dưới từng thẻ, hiện sau khi thẻ bay ra */
+.gift-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  max-height: 0;
+  margin-top: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 500ms ease 1000ms,
+    transform 500ms ease 1000ms,
+    max-height 400ms ease 900ms,
+    margin-top 400ms ease 900ms;
+}
+
+.gift.is-open .gift-actions {
+  max-height: 70px;
+  margin-top: 14px;
+  opacity: 1;
+  transform: none;
+}
+
+.gift-download {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: var(--cw);
+  padding: 9px 6px;
+  font-size: 12.5px;
+  line-height: 1.2;
+}
+
+.gift-download svg {
+  width: 15px;
+  height: 15px;
+  flex: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
 
   .reveal,
@@ -1704,6 +2012,21 @@ select.rsvp-field {
 
   .music-disc,
   .music-btn {
+    animation: none;
+  }
+
+  .gift-stage,
+  .gift-layer,
+  .gift-card,
+  .gift-actions {
+    transition: none;
+  }
+
+  .gift.is-open .gift-card {
+    animation: none;
+  }
+
+  .gift-hint {
     animation: none;
   }
 }
