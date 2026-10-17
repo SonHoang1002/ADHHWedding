@@ -128,23 +128,10 @@ export const danhSachSuKien: SuKienCard[] = [
 
 // ===== Dresscode =====
 export const dresscode = [
- { mau: "#f5f5dc", ten: "Be" },
-  { mau: "#8b5a2b", ten: "Nâu" },
-  { mau: "#f4c430", ten: "Vàng" },
+  { mau: "#C8A88F", ten: "Nâu be" },
+  { mau: "#F9EFE3", ten: "Be nhạt" },
+  { mau: "#F3D88D", ten: "Vàng" },
   { mau: "#f4c2c2", ten: "Hồng" },
-];
-
-// ===== Thư viện ảnh =====
-export const thuVienAnh = [
-  "/gallery/1.jpg",
-  "/gallery/2.jpg",
-  "/gallery/3.jpg",
-  "/gallery/4.jpg",
-  "/gallery/5.jpg",
-  "/gallery/6.jpg",
-  "/gallery/7.jpg",
-  "/gallery/8.jpg",
-  "/gallery/9.jpg",
 ];
 
 // ===== Lời nhắn mẫu (sau này thay bằng dữ liệu từ WebSocket) =====
