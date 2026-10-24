@@ -1,0 +1,14 @@
+{
+    "type": "update_message",
+    "data": [
+        {
+            "id": 15006,
+            "sender_name": "Lê Văn Test (Đã sửa)",
+            "content": "Sửa lại lời chúc: Chúc hai bạn răng long đầu bạc!",
+            "will_attend": false,
+            "guest_of": "Cô dâu",
+            "number_attend": 0,
+            "created_at": "2026-10-24T08:58:55.959404+00:00"
+        }
+    ]
+}

@@ -19,9 +19,8 @@ import {
   loiCamOn,
   loiNhanMau,
   thoiDiemCuoi,
-  LoiNhan,
-  SuKienCard,
-} from "../Constant";
+} from "../constants/wedding";
+import { LoiNhan, SuKienCard } from "../types/wedding";
 
 /* ============================================================
    DANH SÁCH ẢNH (quản lý tập trung tại đây)
@@ -293,39 +292,65 @@ const Countdown: FC<{ target: number }> = ({ target }) => {
 const WishItem: FC<{ wish: LoiNhan }> = ({ wish }) => (
   <div className="wish-item">
     <div className="wish-head">
-      <span className="wish-name">{wish.ten}</span>
-      {wish.bietDanh && <span className="wish-nick">({wish.bietDanh})</span>}
+      <span className="wish-name">{wish.sender_name}</span>
+      {/* {wish.bietDanh && <span className="wish-nick">({wish.bietDanh})</span>} */}
     </div>
-    <p className="wish-content">{wish.noiDung}</p>
-    <div className="wish-time">{formatTime(wish.thoiGian)}</div>
+    <p className="wish-content">{wish.content}</p>
+    <div className="wish-time">{formatTime(wish.time)}</div>
   </div>
 );
 
-const WishesModal: FC<{ wishes: LoiNhan[]; onClose: () => void }> = ({ wishes, onClose }) => (
-  <div className="carousel-overlay wishes-overlay" role="dialog" aria-modal="true">
-    <button className="overlay-close" onClick={onClose} aria-label="Đóng">
-      ✕
-    </button>
-    <div className="wishes-modal">
-      <h3 className="wishes-modal-title">Tất cả lời nhắn ({wishes.length})</h3>
-      <div className="wishes-modal-list">
-        {wishes.map((w) => (
-          <WishItem key={w.id} wish={w} />
-        ))}
+const WishesModal: FC<{
+  wishes: LoiNhan[];
+  onClose: () => void;
+  onLoadMore?: () => void;
+  hasMore?: boolean;
+  loadingMore?: boolean;
+}> = ({ wishes, onClose, onLoadMore, hasMore = false, loadingMore = false }) => {
+  const listRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = listRef.current;
+    if (!el || !onLoadMore) return;
+
+    const handleScroll = () => {
+      if (loadingMore || !hasMore) return;
+      if (el.scrollTop + el.clientHeight >= el.scrollHeight - 50) {
+        onLoadMore();
+      }
+    };
+
+    el.addEventListener("scroll", handleScroll);
+    return () => el.removeEventListener("scroll", handleScroll);
+  }, [onLoadMore, hasMore, loadingMore]);
+
+  return (
+    <div className="carousel-overlay wishes-overlay" role="dialog" aria-modal="true">
+      <button className="overlay-close" onClick={onClose} aria-label="Đóng">
+        ✕
+      </button>
+      <div className="wishes-modal">
+        <h3 className="wishes-modal-title">Tất cả lời nhắn ({wishes.length})</h3>
+        <div className="wishes-modal-list" ref={listRef}>
+          {wishes.map((w) => (
+            <WishItem key={w.id} wish={w} />
+          ))}
+          {loadingMore && <div style={{ textAlign: "center", padding: "12px" }}>Đang tải...</div>}
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 /* ============================================================
    FORM XÁC NHẬN THAM DỰ
    ============================================================ */
 export interface RsvpData {
-  ten: string;
-  noiDung: string;
-  thamDu: "co" | "khong";
-  soLuong: number;
-  khachCua: "chu-re" | "co-dau";
+  sender_name: string;
+  content: string;
+  will_attend: "co" | "khong";
+  number_attend: number;
+  guest_of: "chu-re" | "co-dau";
 }
 
 const RsvpForm: FC<{ onSubmit: (data: RsvpData) => void | Promise<void> }> = ({ onSubmit }) => {
@@ -348,11 +373,11 @@ const RsvpForm: FC<{ onSubmit: (data: RsvpData) => void | Promise<void> }> = ({ 
     setSending(true);
     try {
       await onSubmit({
-        ten: ten.trim(),
-        noiDung: noiDung.trim(),
-        thamDu: thamDu as RsvpData["thamDu"],
-        soLuong: thamDu === "co" ? Math.max(0, Number(soLuong) || 0) : 0,
-        khachCua: khachCua as RsvpData["khachCua"],
+        sender_name: ten.trim(),
+        content: noiDung.trim(),
+        will_attend: thamDu as RsvpData["will_attend"],
+        number_attend: thamDu === "co" ? Math.max(0, Number(soLuong) || 0) : 0,
+        guest_of: khachCua as RsvpData["guest_of"],
       });
       setSent(true);
       setTen("");
@@ -537,8 +562,12 @@ interface WeddingInviteProps {
   onComplete?: () => void;
   /** Gọi khi khách gửi xác nhận (gắn API / WebSocket tại đây) */
   onSubmitRsvp?: (data: RsvpData) => void | Promise<void>;
-  /** Danh sách lời nhắn ban đầu (sau này đẩy realtime qua WebSocket) */
+  /** Danh sách lời nhắn (realtime từ API/WebSocket) */
   wishes?: LoiNhan[];
+  /** Load more wishes khi cuộn */
+  onLoadMoreWishes?: () => void;
+  hasMoreWishes?: boolean;
+  loadingMoreWishes?: boolean;
 }
 
 const WeddingInvite: FC<WeddingInviteProps> = ({
@@ -548,6 +577,9 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
   onComplete = () => {},
   onSubmitRsvp,
   wishes: initialWishes = loiNhanMau,
+  onLoadMoreWishes,
+  hasMoreWishes = false,
+  loadingMoreWishes = false,
 }): ReactElement => {
   const [open, setOpen] = useState<boolean>(false);
   const [envelopeGone, setEnvelopeGone] = useState<boolean>(false);
@@ -661,19 +693,19 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
   /* ----- RSVP ----- */
   const handleRsvp = async (data: RsvpData): Promise<void> => {
     if (onSubmitRsvp) await onSubmitRsvp(data);
-    if (data.noiDung) {
+    if (data.content.trim()) {
       const newWish: LoiNhan = {
         id: `local-${Date.now()}`,
-        ten: data.ten,
-        noiDung: data.noiDung,
-        thoiGian: new Date().toISOString(),
+        sender_name: data.sender_name,
+        content: data.content,
+        time: new Date().toISOString(),
       };
       setWishes((prev) => [newWish, ...prev]);
     }
   };
 
   const sortedWishes = [...wishes].sort(
-    (a, b) => new Date(b.thoiGian).getTime() - new Date(a.thoiGian).getTime()
+    (a, b) => new Date(b.time).getTime() - new Date(a.time).getTime()
   );
 
   return (
@@ -1006,7 +1038,15 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
       {carouselIndex !== null && (
         <GalleryCarousel images={GALLERY_IMAGES} startIndex={carouselIndex} onClose={() => setCarouselIndex(null)} />
       )}
-      {wishesOpen && <WishesModal wishes={sortedWishes} onClose={() => setWishesOpen(false)} />}
+      {wishesOpen && (
+        <WishesModal
+          wishes={sortedWishes}
+          onClose={() => setWishesOpen(false)}
+          onLoadMore={onLoadMoreWishes}
+          hasMore={hasMoreWishes}
+          loadingMore={loadingMoreWishes}
+        />
+      )}
     </div>
   );
 };

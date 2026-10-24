@@ -1,3 +1,8 @@
+
+
+export const BASE_WEBSOCKET_URL = "ws://localhost:3000/ws"
+export const BASE_API_URL = "http://localhost:3000/api"
+
 export const ngayChinhThuc = "12 tháng 12, 2026";
 
 // Thời điểm bắt đầu / kết thúc cả ngày cưới (dùng cho Countdown & Save the Date)
@@ -137,39 +142,35 @@ export const dresscode = [
 // ===== Lời nhắn mẫu (sau này thay bằng dữ liệu từ WebSocket) =====
 export interface LoiNhan {
   id: string;
-  ten: string;
-  bietDanh?: string;
-  noiDung: string;
-  thoiGian: string; // ISO string
+  sender_name: string;
+  content: string;
+  time: string; // ISO string
 }
 
 export const loiNhanMau: LoiNhan[] = [
   {
     id: "w1",
-    ten: "Minh Anh",
-    bietDanh: "Bạn thân cô dâu",
-    noiDung: "Chúc hai bạn trăm năm hạnh phúc, mãi yêu thương và nắm tay nhau thật lâu nhé!",
-    thoiGian: "2026-10-08T20:15:00+07:00",
+    sender_name: "Minh Anh",
+    content: "Chúc hai bạn trăm năm hạnh phúc, mãi yêu thương và nắm tay nhau thật lâu nhé!",
+    time: "2026-10-08T20:15:00+07:00",
   },
   {
     id: "w2",
-    ten: "Quang Huy",
-    bietDanh: "Đồng nghiệp chú rể",
-    noiDung: "Chúc mừng ông bạn sắp lên xe hoa. Hạnh phúc viên mãn nhé!",
-    thoiGian: "2026-10-08T21:40:00+07:00",
+    sender_name: "Quang Huy",
+    content: "Chúc mừng ông bạn sắp lên xe hoa. Hạnh phúc viên mãn nhé!",
+    time: "2026-10-08T21:40:00+07:00",
   },
   {
     id: "w3",
-    ten: "Thu Hà",
-    bietDanh: "Dì Hà",
-    noiDung: "Dì chúc hai con luôn hạnh phúc, sớm có tin vui. Hẹn gặp hai con ngày cưới!",
-    thoiGian: "2026-10-09T06:05:00+07:00",
+    sender_name: "Thu Hà",
+    content: "Dì chúc hai con luôn hạnh phúc, sớm có tin vui. Hẹn gặp hai con ngày cưới!",
+    time: "2026-10-09T06:05:00+07:00",
   },
   {
     id: "w4",
-    ten: "Đức Mạnh",
-    noiDung: "Chúc cô dâu chú rể trăm năm hạnh phúc!",
-    thoiGian: "2026-10-09T07:10:00+07:00",
+    sender_name: "Đức Mạnh",
+    content: "Chúc cô dâu chú rể trăm năm hạnh phúc!",
+    time: "2026-10-09T07:10:00+07:00",
   },
 ];
 
