@@ -111,29 +111,6 @@ body {
   margin-bottom: 12px;
 }
 
-.invite-guest {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  margin: 0 auto 14px;
-  max-width: 90%;
-}
-
-.invite-guest-label {
-  color: #b08d57;
-  font-size: 10px;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-}
-
-.invite-guest-name {
-  color: #f3d69b;
-  font-size: clamp(20px, 5.5vw, 28px);
-  line-height: 1.2;
-  overflow-wrap: anywhere;
-}
-
 .invite-word {
   color: #f4efe6;
   font-size: 16px;

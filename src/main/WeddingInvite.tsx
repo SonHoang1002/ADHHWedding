@@ -867,13 +867,7 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
         <div className="envelope-initial-screen">
           <div className={`invite-content${open ? " is-opening" : ""}`}>
             <div className="invite-heading">TRÂN TRỌNG KÍNH MỜI</div>
-            {guestName && (
-              <div className="invite-guest">
-                <span className="invite-guest-label">Kính mời</span>
-                <span className="invite-guest-name">{guestName}</span>
-              </div>
-            )}
-            <div className="invite-word">Em DẸO</div>
+            <div className="invite-word">{guestName ?? "Em DẸO"}</div>
 
             <div
               className={`envelope${open ? " is-open" : ""}`}
