@@ -1,7 +1,7 @@
 import { BASE_API_URL } from "../constants/config";
 import { ApiResponse } from "../types/api";
 import { Message } from "../types/message";
-import { RsvpData } from "../types/wedding";
+import { RsvpData } from "../Constant";
 
 export async function getMessage(before?: string): Promise<Message[]> {
   let url = `${BASE_API_URL}/messages/`;

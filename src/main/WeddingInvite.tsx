@@ -14,13 +14,17 @@ import {
   coDau,
   danhSachSuKien,
   dresscode,
-  lichTrinhLeCuoi,
   leCuoi,
+  lichTrinhLeCuoi,
   loiCamOn,
   loiNhanMau,
+  LoiNhan,
+  RsvpData,
+  SuKienCard,
+  SuKienDiaDiem,
   thoiDiemCuoi,
-} from "../constants/wedding";
-import { LoiNhan, SuKienCard } from "../types/wedding";
+} from "../Constant";
+import type { InvitationSide } from "../types/invitation";
 
 /* ============================================================
    DANH SÁCH ẢNH (quản lý tập trung tại đây)
@@ -59,7 +63,6 @@ const THANKS_IMAGE: string = IMAGES.wedding[4];
 /* ============================================================
    TIỆN ÍCH
    ============================================================ */
-const enc = encodeURIComponent;
 const pad = (n: number): string => String(n).padStart(2, "0");
 
 const formatTime = (iso: string): string =>
@@ -70,6 +73,16 @@ const formatTime = (iso: string): string =>
     month: "2-digit",
     year: "numeric",
   });
+
+// Tách "Tại nhà gái: 88 Mạc Đĩnh Chi..." thành tên địa điểm + địa chỉ
+const parseLocation = (location: string): { name: string | null; address: string } => {
+  const sep = location.indexOf(":");
+  if (sep === -1) return { name: null, address: location.trim() };
+  return {
+    name: location.slice(0, sep).trim(),
+    address: location.slice(sep + 1).trim(),
+  };
+};
 
 // Ảnh lỗi/thiếu thì ẩn đi, để nền placeholder của khung hiển thị
 const SafeImg: FC<{ src: string; alt: string; className?: string }> = ({ src, alt, className }) => {
@@ -128,7 +141,36 @@ const SectionTitle: FC<{ sub?: string; title: string }> = ({ sub, title }) => (
 );
 
 /* ============================================================
-   THẺ SỰ KIỆN (collapse / expand Google Map)
+   BẢN ĐỒ SỰ KIỆN (Google Maps)
+   Mỗi địa điểm có một bản đồ riêng, phía trên là label
+   "Nhà trai" / "Nhà gái".
+   ============================================================ */
+const EventMaps: FC<{ points: SuKienDiaDiem[]; title: string }> = ({ points, title }) => (
+  <div className="event-map-list">
+    {points.map((point, i) => (
+      <div className="event-map-item" key={`${point.label}-${i}`}>
+        <span className="event-map-item-label">{point.label}</span>
+        <iframe
+          title={`Bản đồ ${title} – ${point.label}`}
+          src={`https://maps.google.com/maps?q=${point.lat},${point.lng}&z=16&hl=vi&output=embed`}
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+        />
+        <a
+          className="event-directions"
+          href={`https://www.google.com/maps/search/?api=1&query=${point.lat},${point.lng}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {points.length > 1 ? `Chỉ đường ${point.label}` : "Chỉ đường trên Google Maps"}
+        </a>
+      </div>
+    ))}
+  </div>
+);
+
+/* ============================================================
+   THẺ SỰ KIỆN (collapse / expand bản đồ)
    ============================================================ */
 const EventCard: FC<{ item: SuKienCard; index: number }> = ({ item, index }) => {
   const [expanded, setExpanded] = useState<boolean>(false);
@@ -136,7 +178,7 @@ const EventCard: FC<{ item: SuKienCard; index: number }> = ({ item, index }) => 
 
   const toggle = (): void => {
     setExpanded((v) => !v);
-    setLoaded(true); // chỉ nạp iframe khi bấm mở lần đầu
+    setLoaded(true); // chỉ khởi tạo bản đồ khi bấm mở lần đầu
   };
 
   return (
@@ -153,9 +195,25 @@ const EventCard: FC<{ item: SuKienCard; index: number }> = ({ item, index }) => 
             <em className="event-lunar">{item.ngayAm}</em>
           </span>
         </div>
-        <div className="event-row">
+        <div className="event-row event-row-locations">
           <span className="event-label">Địa điểm</span>
-          <span>{item.diaDiem}</span>
+          <ul className="event-locations">
+            {item.diaDiem.map((location, i) => {
+              const { name, address } = parseLocation(location);
+              return (
+                <li className="event-location" key={i}>
+                  {name ? (
+                    <>
+                      <span className="event-location-name">{name}</span>
+                      <span className="event-location-address">{address}</span>
+                    </>
+                  ) : (
+                    <span className="event-location-address">{address}</span>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
         </div>
 
         <button type="button" className="event-map-toggle" onClick={toggle} aria-expanded={expanded}>
@@ -165,23 +223,12 @@ const EventCard: FC<{ item: SuKienCard; index: number }> = ({ item, index }) => 
           </svg>
         </button>
 
-        <div className={`event-map${expanded ? " is-open" : ""}`}>
-          {loaded && (
-            <iframe
-              title={`Bản đồ ${item.ten}`}
-              src={`https://maps.google.com/maps?q=${enc(item.diaChi)}&z=16&output=embed`}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
-          )}
-          <a
-            className="event-directions"
-            href={`https://www.google.com/maps/search/?api=1&query=${enc(item.diaChi)}`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Chỉ đường trên Google Maps
-          </a>
+        <div
+          className={`event-map${expanded ? " is-open" : ""}${
+            item.banDo.length > 1 ? " is-multi" : ""
+          }`}
+        >
+          {loaded && <EventMaps points={item.banDo} title={item.ten} />}
         </div>
       </div>
     </Reveal>
@@ -345,20 +392,15 @@ const WishesModal: FC<{
 /* ============================================================
    FORM XÁC NHẬN THAM DỰ
    ============================================================ */
-export interface RsvpData {
-  sender_name: string;
-  content: string;
-  will_attend: "co" | "khong";
-  number_attend: number;
-  guest_of: "chu-re" | "co-dau";
-}
-
-const RsvpForm: FC<{ onSubmit: (data: RsvpData) => void | Promise<void> }> = ({ onSubmit }) => {
+const RsvpForm: FC<{
+  onSubmit: (data: RsvpData) => void | Promise<void>;
+  defaultGuestOf?: RsvpData["guest_of"];
+}> = ({ onSubmit, defaultGuestOf = "chu-re" }) => {
   const [ten, setTen] = useState<string>("");
   const [noiDung, setNoiDung] = useState<string>("");
   const [thamDu, setThamDu] = useState<string>("");
   const [soLuong, setSoLuong] = useState<string>("");
-  const [khachCua, setKhachCua] = useState<string>("");
+  const [khachCua, setKhachCua] = useState<string>(defaultGuestOf);
   const [sending, setSending] = useState<boolean>(false);
   const [sent, setSent] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
@@ -384,7 +426,7 @@ const RsvpForm: FC<{ onSubmit: (data: RsvpData) => void | Promise<void> }> = ({ 
       setNoiDung("");
       setThamDu("");
       setSoLuong("");
-      setKhachCua("");
+      setKhachCua(defaultGuestOf);
     } catch {
       setError("Gửi chưa được, bạn thử lại giúp chúng mình nhé.");
     } finally {
@@ -490,8 +532,9 @@ const QrPic: FC<{ src: string; alt: string }> = ({ src, alt }) => {
   return <img src={src} alt={alt} onError={() => setFailed(true)} />;
 };
 
-const GiftEnvelope: FC = () => {
+const GiftEnvelope: FC<{ side: InvitationSide }> = ({ side }) => {
   const [opened, setOpened] = useState<boolean>(false);
+  const qrItems = side === "nha-gai" ? [QR_ITEMS[1], QR_ITEMS[0]] : QR_ITEMS;
 
   return (
     <div className={`gift${opened ? " is-open" : ""}`}>
@@ -503,7 +546,7 @@ const GiftEnvelope: FC = () => {
         </div>
 
         {/* 2 thẻ QR: ban đầu chỉ ló ra khỏi phong bì, khi mở thì bay ra giữa */}
-        {QR_ITEMS.map((q, i) => (
+        {qrItems.map((q, i) => (
           <div key={q.key} className={`gift-card ${i === 0 ? "gift-card-left" : "gift-card-right"}`}>
             <div className="gift-qr">
               <QrPic src={q.src} alt={`Mã QR mừng cưới ${q.label}`} />
@@ -533,7 +576,7 @@ const GiftEnvelope: FC = () => {
       <p className="gift-hint">Chạm để mở phong bao</p>
 
       <div className="gift-actions">
-        {QR_ITEMS.map((q) => (
+        {qrItems.map((q) => (
           <button
             key={q.key}
             type="button"
@@ -559,6 +602,10 @@ interface WeddingInviteProps {
   bride?: string;
   date?: string;
   location?: string;
+  /** Thiệp dành cho nhà trai hay nhà gái (lấy từ đường dẫn) */
+  side?: InvitationSide;
+  /** Tên khách mời lấy từ query `?to=...`, hiển thị ở màn mở đầu */
+  guestName?: string;
   onComplete?: () => void;
   /** Gọi khi khách gửi xác nhận (gắn API / WebSocket tại đây) */
   onSubmitRsvp?: (data: RsvpData) => void | Promise<void>;
@@ -571,9 +618,11 @@ interface WeddingInviteProps {
 }
 
 const WeddingInvite: FC<WeddingInviteProps> = ({
-  groom = "Huy Hiếu",
-  bride = "Ánh Dương",
-  date = "12.12.2026",
+  groom = chuRe.ten,
+  bride = coDau.ten,
+  date = leCuoi.ngayDuongLich.replace(/\//g, "."),
+  side = "nha-trai",
+  guestName,
   onComplete = () => {},
   onSubmitRsvp,
   wishes: initialWishes = loiNhanMau,
@@ -684,11 +733,54 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
   const galleryAnims: Anim[] = ["fade", "left", "right", "zoom", "rotate", "flip"];
   const previewImages = GALLERY_IMAGES.slice(0, 6);
 
+  /* ----- Nhà trai / Nhà gái ----- */
+  const isGroomSide = side === "nha-trai";
+  const orderedNames = isGroomSide ? [groom, bride] : [bride, groom];
+  const sideLabel = isGroomSide ? "Nhà trai" : "Nhà gái";
+
+  // Ưu tiên hiển thị trước những nghi lễ/tiệc gắn với bên gửi thiệp
+  const priorityEventIds = isGroomSide
+    ? ["thanh-hon", "tiec-cuoi-nha-trai"]
+    : ["an-hoi", "vu-quy", "tiec-cuoi-nha-gai"];
+
   // Gán ảnh cho các thẻ sự kiện (xoay vòng nếu số sự kiện nhiều hơn số ảnh)
-  const events: SuKienCard[] = danhSachSuKien.map((item, i) => ({
-    ...item,
-    anh: EVENT_IMAGES[i % EVENT_IMAGES.length],
-  }));
+  const events: SuKienCard[] = [...danhSachSuKien]
+    .sort((a, b) => {
+      const aIndex = priorityEventIds.indexOf(a.id);
+      const bIndex = priorityEventIds.indexOf(b.id);
+      if (aIndex === -1 && bIndex === -1) return 0;
+      if (aIndex === -1) return 1;
+      if (bIndex === -1) return -1;
+      return aIndex - bIndex;
+    })
+    .map((item, i) => ({
+      ...item,
+      anh: EVENT_IMAGES[i % EVENT_IMAGES.length],
+    }));
+
+  const people = [
+    {
+      key: "groom",
+      role: "Chú rể",
+      photo: IMAGES.groom,
+      childWord: "Con trai",
+      name: chuRe.tenDayDu,
+      parentFather: chuRe.bo,
+      parentMother: chuRe.me,
+      home: chuRe.queQuan,
+    },
+    {
+      key: "bride",
+      role: "Cô dâu",
+      photo: IMAGES.bride,
+      childWord: "Con gái",
+      name: coDau.tenDayDu,
+      parentFather: coDau.bo,
+      parentMother: coDau.me,
+      home: coDau.queQuan,
+    },
+  ];
+  const orderedPeople = isGroomSide ? people : [people[1], people[0]];
 
   /* ----- RSVP ----- */
   const handleRsvp = async (data: RsvpData): Promise<void> => {
@@ -775,7 +867,7 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
         <div className="envelope-initial-screen">
           <div className={`invite-content${open ? " is-opening" : ""}`}>
             <div className="invite-heading">TRÂN TRỌNG KÍNH MỜI</div>
-            <div className="invite-word">Em DẸO</div>
+            <div className="invite-word">{guestName ?? "Em DẸO"}</div>
 
             <div
               className={`envelope${open ? " is-open" : ""}`}
@@ -798,9 +890,9 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
             <div className="invite-details">
               <div className="names-stage">
                 <div className="names-row">
-                  <div className="name-piece">{groom}</div>
+                  <div className="name-piece">{orderedNames[0]}</div>
                   <div className="amp">&amp;</div>
-                  <div className="name-piece">{bride}</div>
+                  <div className="name-piece">{orderedNames[1]}</div>
                 </div>
               </div>
               <div className="date">{date}</div>
@@ -822,7 +914,7 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
 
             <div className={`center-text-overlay${showText ? " is-visible" : ""}`}>
               <div className="overlay-names">
-                {groom} <span className="overlay-amp">&amp;</span> {bride}
+                {orderedNames[0]} <span className="overlay-amp">&amp;</span> {orderedNames[1]}
               </div>
               <div className="overlay-divider" />
               <div className="overlay-date">{date}</div>
@@ -880,39 +972,32 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
               <SectionTitle sub="Gia đình hai bên" title="Chú rể & Cô dâu" />
 
               <div className="person-list">
-                <Reveal className="person-card" anim="left">
-                  <div className="person-photo">
-                    <SafeImg src={IMAGES.groom} alt={chuRe.tenDayDu} />
-                  </div>
-                  <div className="person-role">Chú rể</div>
-                  <h3 className="person-name">{chuRe.tenDayDu}</h3>
-                  <p className="person-parents">
-                    Con trai ông <b>{chuRe.bo}</b>
-                    <br />
-                    và bà <b>{chuRe.me}</b>
-                  </p>
-                  <p className="person-home">{chuRe.queQuan}</p>
-                </Reveal>
-
-                <Reveal className="person-card" anim="right" delay={120}>
-                  <div className="person-photo">
-                    <SafeImg src={IMAGES.bride} alt={coDau.tenDayDu} />
-                  </div>
-                  <div className="person-role">Cô dâu</div>
-                  <h3 className="person-name">{coDau.tenDayDu}</h3>
-                  <p className="person-parents">
-                    Con gái ông <b>{coDau.bo}</b>
-                    <br />
-                    và bà <b>{coDau.me}</b>
-                  </p>
-                  <p className="person-home">{coDau.queQuan}</p>
-                </Reveal>
+                {orderedPeople.map((person, i) => (
+                  <Reveal
+                    key={person.key}
+                    className="person-card"
+                    anim={i === 0 ? "left" : "right"}
+                    delay={i === 0 ? 0 : 120}
+                  >
+                    <div className="person-photo">
+                      <SafeImg src={person.photo} alt={person.name} />
+                    </div>
+                    <div className="person-role">{person.role}</div>
+                    <h3 className="person-name">{person.name}</h3>
+                    <p className="person-parents">
+                      {person.childWord} ông <b>{person.parentFather}</b>
+                      <br />
+                      và bà <b>{person.parentMother}</b>
+                    </p>
+                    <p className="person-home">{person.home}</p>
+                  </Reveal>
+                ))}
               </div>
             </section>
 
             {/* ===== 3) NGÀY TRỌNG ĐẠI ===== */}
             <section className="page-section section-events">
-              <SectionTitle sub="Trân trọng kính mời" title="Ngày trọng đại" />
+              <SectionTitle sub={`Trân trọng kính mời – ${sideLabel}`} title="Ngày trọng đại" />
               <div className="event-list">
                 {events.map((item, i) => (
                   <EventCard key={item.id} item={item} index={i} />
@@ -1006,7 +1091,10 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
             <section className="page-section section-rsvp">
               <SectionTitle sub="Xác nhận tham dự" title="Gửi lời nhắn" />
               <Reveal className="rsvp-wrap">
-                <RsvpForm onSubmit={handleRsvp} />
+                <RsvpForm
+                  onSubmit={handleRsvp}
+                  defaultGuestOf={isGroomSide ? "chu-re" : "co-dau"}
+                />
               </Reveal>
             </section>
 
@@ -1014,7 +1102,7 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
             <section className="page-section section-gift">
               <SectionTitle sub="Gửi lời chúc & quà mừng" title="Phong bao mừng cưới" />
               <Reveal anim="up">
-                <GiftEnvelope />
+                <GiftEnvelope side={side} />
               </Reveal>
             </section>
 
@@ -1027,7 +1115,7 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
                 <div className="thanks-script">Cảm ơn</div>
                 <p className="thanks-text">{loiCamOn}</p>
                 <div className="thanks-names">
-                  {groom} &amp; {bride}
+                  {orderedNames[0]} &amp; {orderedNames[1]}
                 </div>
               </Reveal>
             </section>

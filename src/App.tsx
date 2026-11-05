@@ -1,13 +1,16 @@
+"use client";
+
 import { FC, ReactElement, useCallback, useEffect, useRef, useState } from "react";
 
 import WeddingInvite from "./main/WeddingInvite";
 import { Message } from "./types/message";
 import { Wish } from "./types/message";
+import type { InvitationPageProps } from "./types/invitation";
 import { createMessage, getMessage } from "./service/ApiService";
 import { useWebSocket } from "./service/WebsocketService";
 import { mapMessageToWish } from "./utils/mappers";
 
-const App: FC = (): ReactElement => {
+const App: FC<InvitationPageProps> = ({ side, guestName }): ReactElement => {
   const [wishes, setWishes] = useState<Wish[]>([]);
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -86,6 +89,8 @@ const App: FC = (): ReactElement => {
 
   return (
     <WeddingInvite
+      side={side}
+      guestName={guestName}
       onSubmitRsvp={handleSubmitRsvp}
       wishes={wishes}
       onLoadMoreWishes={loadMoreWishes}
