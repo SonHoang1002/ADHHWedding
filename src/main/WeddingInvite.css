@@ -111,6 +111,29 @@ body {
   margin-bottom: 12px;
 }
 
+.invite-guest {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  margin: 0 auto 14px;
+  max-width: 90%;
+}
+
+.invite-guest-label {
+  color: #b08d57;
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+}
+
+.invite-guest-name {
+  color: #f3d69b;
+  font-size: clamp(20px, 5.5vw, 28px);
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
 .invite-word {
   color: #f4efe6;
   font-size: 16px;
@@ -838,6 +861,73 @@ body {
   color: rgba(74, 79, 47, 0.75);
 }
 
+/* Địa điểm: hiển thị dạng danh sách để card vẫn gọn khi có nhiều nơi */
+.event-row-locations {
+  align-items: start;
+}
+
+.event-locations {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.event-location {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-left: 16px;
+}
+
+.event-location::before {
+  content: "";
+  position: absolute;
+  left: 1px;
+  top: 7px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+.event-location + .event-location {
+  padding-top: 10px;
+  border-top: 1px dashed rgba(217, 196, 138, 0.25);
+}
+
+.event-location + .event-location::before {
+  top: 17px;
+}
+
+.event-location-name {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 11px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.event-location-address {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+@media (max-width: 360px) {
+  .event-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .event-label {
+    padding-top: 0;
+  }
+}
+
 .event-map-toggle {
   display: flex;
   align-items: center;
@@ -878,7 +968,32 @@ body {
   margin-top: 12px;
 }
 
-.event-map iframe {
+/* Thẻ có nhiều địa điểm: mỗi địa điểm một bản đồ, xếp dọc */
+.event-map.is-open.is-multi {
+  max-height: 760px;
+}
+
+.event-map-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.event-map-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.event-map-item-label {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: var(--gold);
+  text-transform: uppercase;
+}
+
+.event-map-item iframe {
   display: block;
   width: 100%;
   height: 250px;
@@ -886,12 +1001,20 @@ body {
   border-radius: 14px;
 }
 
+.event-map.is-multi .event-map-item iframe {
+  height: 200px;
+}
+
 .event-directions {
   display: block;
-  margin-top: 8px;
+  margin-top: 4px;
   text-align: center;
   font-size: 13px;
   color: var(--olive);
+}
+
+.event-directions:hover {
+  color: var(--olive-dark);
 }
 
 /* ============================================================
