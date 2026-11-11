@@ -604,7 +604,7 @@ interface WeddingInviteProps {
   location?: string;
   /** Thiệp dành cho nhà trai hay nhà gái (lấy từ đường dẫn) */
   side?: InvitationSide;
-  /** Tên khách mời lấy từ query `?to=...`, hiển thị ở màn mở đầu */
+  /** Tên khách mời lấy từ query `?to=...`; chỉ hiện dòng "TRÂN TRỌNG KÍNH MỜI" kèm tên khi có tên */
   guestName?: string;
   onComplete?: () => void;
   /** Gọi khi khách gửi xác nhận (gắn API / WebSocket tại đây) */
@@ -866,8 +866,12 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
       {!envelopeGone && (
         <div className="envelope-initial-screen">
           <div className={`invite-content${open ? " is-opening" : ""}`}>
-            <div className="invite-heading">TRÂN TRỌNG KÍNH MỜI</div>
-            <div className="invite-word">{guestName ?? "Em DẸO"}</div>
+            {guestName && (
+              <>
+                <div className="invite-heading">TRÂN TRỌNG KÍNH MỜI</div>
+                <div className="invite-word">{guestName}</div>
+              </>
+            )}
 
             <div
               className={`envelope${open ? " is-open" : ""}`}

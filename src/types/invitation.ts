@@ -3,7 +3,7 @@ export type InvitationSide = "nha-trai" | "nha-gai";
 export interface InvitationPageProps {
   /** Nhà trai hay nhà gái – quyết định đường dẫn và một số nội dung hiển thị. */
   side: InvitationSide;
-  /** Tên khách mời lấy từ query `?to=...`, hiển thị ở màn mở đầu thiệp. */
+  /** Tên khách mời lấy từ query `?to=...`; chỉ hiện dòng "TRÂN TRỌNG KÍNH MỜI" kèm tên khi có tên */
   guestName?: string;
 }
 

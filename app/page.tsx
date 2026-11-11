@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { chuRe, coDau } from "../src/Constant";
+import GuestLinkGenerator from "../src/main/GuestLinkGenerator";
 import { INVITATION_PATHS } from "../src/types/invitation";
 
 export const metadata: Metadata = {
@@ -75,8 +76,10 @@ export default function HomePage() {
           </Link>
         ))}
       </div>
+      <GuestLinkGenerator />
       <p style={{ margin: 0, fontSize: 13, color: "rgba(233, 223, 200, 0.7)", textAlign: "center" }}>
-        Thêm <code>?to=Tên khách</code> vào cuối đường dẫn để cá nhân hoá lời mời.
+        Link có <code>?to=Tên khách</code> sẽ hiển thị dòng "TRÂN TRỌNG KÍNH MỜI" kèm tên khách; không
+        có thì ẩn. Link bị lỗi dấu (do gõ/copy sai nơi khác) vẫn được tự sửa khi mở thiệp.
       </p>
     </main>
   );

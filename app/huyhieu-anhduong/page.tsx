@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import App from "../../src/App";
 import { chuRe, coDau } from "../../src/Constant";
+import { normalizeGuestName } from "../../src/utils/guest";
 
 export const metadata: Metadata = {
   title: `Thiệp nhà trai – ${chuRe.ten} & ${coDau.ten}`,
@@ -9,13 +10,13 @@ export const metadata: Metadata = {
 };
 
 interface PageProps {
-  searchParams: Promise<{ to?: string | string[]; guest?: string | string[] }>;
+  searchParams: Promise<{ to?: string | string[] }>;
 }
 
 export default async function NhaTraiPage({ searchParams }: PageProps) {
   const params = await searchParams;
-  const guest = params.to ?? params.guest;
-  const guestName = (Array.isArray(guest) ? guest[0] : guest)?.trim() || undefined;
+  // Chỉ hiển thị người được kính mời khi đường dẫn có ?to=... (tự sửa link bị lỗi encode)
+  const guestName = normalizeGuestName(params.to);
 
   return <App side="nha-trai" guestName={guestName} />;
 }

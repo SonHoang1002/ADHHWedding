@@ -21,7 +21,13 @@ Thêm query `?to=<tên khách>` vào cuối đường dẫn:
 ```
 
 Tên khách sẽ hiển thị ngay dưới dòng "TRÂN TRỌNG KÍNH MỜI" ở màn mở đầu thiệp.
-Có thể dùng `?guest=` thay cho `?to=`.
+Nếu đường dẫn không có `?to=`, dòng "TRÂN TRỌNG KÍNH MỜI" cùng tên khách sẽ không hiển thị.
+
+> **Mẹo:** dùng công cụ **"Tạo link mời khách"** ngay trên trang chủ `/` – chỉ cần gõ tên
+> (vd `Em Hải Anh`) và bấm Copy, link sẽ được encode đúng chuẩn tiếng Việt.
+
+Link bị lỗi encode khi tạo ở nơi khác (encode 2 lần, mojibake `Háº£i`, ký tự tách rời `Hải`)
+cũng được tự động sửa lại thành text tiếng Việt đúng khi mở thiệp – xem `src/utils/guest.ts`.
 
 Phía nhà trai/nhà gái cũng được dùng để:
 
@@ -32,14 +38,24 @@ Phía nhà trai/nhà gái cũng được dùng để:
 
 ## Chạy project
 
+Cần chạy **2 terminal** – backend trước, frontend sau:
+
 ```bash
+# Terminal 1 – backend (project `wedding-server` nằm cạnh thư mục này, cổng 3000)
+cd ../wedding-server
+bun install
+bun run index.ts
+
+# Terminal 2 – frontend thiệp (cổng 3002)
 npm install
 npm run dev
 ```
 
-Mở [http://localhost:3001](http://localhost:3001).
+Mở [http://localhost:3002](http://localhost:3002).
 
-> Cổng dev mặc định là **3001** để không trùng với backend ở cổng 3000.
+> Không chạy backend thì thiệp vẫn mở được, nhưng phần "Lời chúc" sẽ không tải được
+> (console hiện `Không thể tải danh sách tin nhắn: TypeError: Failed to fetch`
+> tại `fetch(url)` trong `src/service/ApiService.ts`).
 
 Build production:
 
