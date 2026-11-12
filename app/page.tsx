@@ -37,7 +37,7 @@ export default function HomePage() {
         padding: "40px 20px",
         background: "linear-gradient(135deg, #6e1a20, #380a0e)",
         color: "#f4efe6",
-        fontFamily: "'Lora', Georgia, serif",
+        fontFamily: "var(--font-lora), Georgia, serif",
       }}
     >
       <h1 style={{ fontSize: 28, fontWeight: 500, margin: 0, textAlign: "center" }}>

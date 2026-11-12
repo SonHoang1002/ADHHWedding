@@ -78,6 +78,12 @@ NEXT_PUBLIC_API_URL=https://api.example.com/api
 NEXT_PUBLIC_WS_URL=wss://api.example.com/ws
 ```
 
+## Cache lời chúc
+
+Danh sách lời chúc tải thành công được lưu tối đa **20 tin mới nhất** vào `localStorage`
+(key `adhh-wedding:wishes:v1`). Khi API/WebSocket lời chúc không truy cập được, thiệp vẫn
+hiển thị các lời chúc đã cache từ lần mở trước thay vì để trống.
+
 ## Cấu trúc chính
 
 - `app/` – các route Next.js (`/`, `/huyhieu-anhduong`, `/anhduong-huyhieu`)

@@ -506,6 +506,9 @@ const QR_ITEMS = [
   { key: "bride", label: "Cô dâu", src: IMAGES.qr.bride, file: "qr-co-dau" },
 ];
 
+// Tạm ẩn phần phong bao mừng cưới ở cả hai thiệp; đổi thành true để hiện lại.
+const SHOW_GIFT_SECTION = false;
+
 // Tải ảnh về máy. Nếu không tải được (file thiếu / trình duyệt chặn) thì mở ảnh ở tab mới
 const downloadImage = async (src: string, fileBase: string): Promise<void> => {
   try {
@@ -738,16 +741,23 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
   const orderedNames = isGroomSide ? [groom, bride] : [bride, groom];
   const sideLabel = isGroomSide ? "Nhà trai" : "Nhà gái";
 
-  // Ưu tiên hiển thị trước những nghi lễ/tiệc gắn với bên gửi thiệp
-  const priorityEventIds = isGroomSide
-    ? ["thanh-hon", "tiec-cuoi-nha-trai"]
-    : ["an-hoi", "vu-quy", "tiec-cuoi-nha-gai"];
+  // Mỗi thiệp chỉ hiển thị tiệc cưới của bên mình.
+  const hiddenEventId = isGroomSide ? "tiec-cuoi-nha-gai" : "tiec-cuoi-nha-trai";
+
+  // Thứ tự cố định: Ăn Hỏi → Vu Quy → Thành Hôn → Tiệc cưới của bên gửi thiệp.
+  const orderedEventIds = [
+    "an-hoi",
+    "vu-quy",
+    "thanh-hon",
+    isGroomSide ? "tiec-cuoi-nha-trai" : "tiec-cuoi-nha-gai",
+  ];
 
   // Gán ảnh cho các thẻ sự kiện (xoay vòng nếu số sự kiện nhiều hơn số ảnh)
   const events: SuKienCard[] = [...danhSachSuKien]
+    .filter((item) => item.id !== hiddenEventId)
     .sort((a, b) => {
-      const aIndex = priorityEventIds.indexOf(a.id);
-      const bIndex = priorityEventIds.indexOf(b.id);
+      const aIndex = orderedEventIds.indexOf(a.id);
+      const bIndex = orderedEventIds.indexOf(b.id);
       if (aIndex === -1 && bIndex === -1) return 0;
       if (aIndex === -1) return 1;
       if (bIndex === -1) return -1;
@@ -973,7 +983,10 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
 
             {/* ===== 2) CHÚ RỂ & CÔ DÂU ===== */}
             <section className="page-section section-couple">
-              <SectionTitle sub="Gia đình hai bên" title="Chú rể & Cô dâu" />
+              <SectionTitle
+                sub="Gia đình hai bên"
+                title={isGroomSide ? "Chú rể & Cô dâu" : "Cô dâu & Chú rể"}
+              />
 
               <div className="person-list">
                 {orderedPeople.map((person, i) => (
@@ -1103,12 +1116,14 @@ const WeddingInvite: FC<WeddingInviteProps> = ({
             </section>
 
             {/* ===== 10) PHONG BAO MỪNG CƯỚI (2 MÃ QR) ===== */}
-            <section className="page-section section-gift">
-              <SectionTitle sub="Gửi lời chúc & quà mừng" title="Phong bao mừng cưới" />
-              <Reveal anim="up">
-                <GiftEnvelope side={side} />
-              </Reveal>
-            </section>
+            {SHOW_GIFT_SECTION && (
+              <section className="page-section section-gift">
+                <SectionTitle sub="Gửi lời chúc & quà mừng" title="Phong bao mừng cưới" />
+                <Reveal anim="up">
+                  <GiftEnvelope side={side} />
+                </Reveal>
+              </section>
+            )}
 
             {/* ===== 11) LỜI CẢM ƠN ===== */}
             <section className="page-section section-thanks">
