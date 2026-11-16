@@ -25,6 +25,7 @@ import {
   thoiDiemCuoi,
 } from "../Constant";
 import type { InvitationSide } from "../types/invitation";
+import { ApiError } from "../service/ApiService";
 
 /* ============================================================
    DANH SÁCH ẢNH (quản lý tập trung tại đây)
@@ -392,6 +393,22 @@ const WishesModal: FC<{
 /* ============================================================
    FORM XÁC NHẬN THAM DỰ
    ============================================================ */
+function getErrorDetails(error: unknown): string {
+  if (!(error instanceof ApiError)) return "";
+
+  const lines: string[] = [];
+  lines.push(
+    error.status > 0
+      ? `Mã lỗi: HTTP ${error.status}`
+      : "Mã lỗi: không nhận được phản hồi HTTP"
+  );
+  lines.push(`API: ${error.method} ${error.url}`);
+  if (error.requestBody) lines.push(`Dữ liệu gửi: ${error.requestBody}`);
+  if (error.responseBody) lines.push(`Phản hồi từ server: ${error.responseBody}`);
+
+  return lines.join("\n");
+}
+
 const RsvpForm: FC<{
   onSubmit: (data: RsvpData) => void | Promise<void>;
   defaultGuestOf?: RsvpData["guest_of"];
@@ -404,14 +421,17 @@ const RsvpForm: FC<{
   const [sending, setSending] = useState<boolean>(false);
   const [sent, setSent] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+  const [errorDetails, setErrorDetails] = useState<string>("");
 
   const handleSubmit = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
     if (!ten.trim() || !thamDu || !khachCua) {
       setError("Bạn vui lòng nhập tên, chọn tham dự và khách mời của ai nhé!");
+      setErrorDetails("");
       return;
     }
     setError("");
+    setErrorDetails("");
     setSending(true);
     try {
       await onSubmit({
@@ -427,8 +447,13 @@ const RsvpForm: FC<{
       setThamDu("");
       setSoLuong("");
       setKhachCua(defaultGuestOf);
-    } catch {
-      setError("Gửi chưa được, bạn thử lại giúp chúng mình nhé.");
+    } catch (err) {
+      setError(
+        err instanceof Error && err.message
+          ? err.message
+          : "Gửi chưa được, bạn thử lại giúp chúng mình nhé."
+      );
+      setErrorDetails(getErrorDetails(err));
     } finally {
       setSending(false);
     }
@@ -466,7 +491,16 @@ const RsvpForm: FC<{
         value={noiDung}
         onChange={(e) => setNoiDung(e.target.value)}
       />
-      <select className="rsvp-field" value={thamDu} onChange={(e) => setThamDu(e.target.value)}>
+      <select
+        className="rsvp-field"
+        value={thamDu}
+        onChange={(e) => {
+          const value = e.target.value;
+          setThamDu(value);
+          if (value === "khong") setSoLuong("0");
+          if (value === "co") setSoLuong("");
+        }}
+      >
         <option value="" disabled>
           Bạn sẽ đến chứ?
         </option>
@@ -477,11 +511,12 @@ const RsvpForm: FC<{
         className="rsvp-field"
         type="number"
         min={0}
+        step={1}
         inputMode="numeric"
-        placeholder="Số lượng tham dự cùng?"
+        placeholder="Số người tham dự cùng?"
         value={soLuong}
         disabled={thamDu === "khong"}
-        onChange={(e) => setSoLuong(e.target.value)}
+        onChange={(e) => setSoLuong(e.target.value.replace(/[^\d]/g, ""))}
       />
       <select className="rsvp-field" value={khachCua} onChange={(e) => setKhachCua(e.target.value)}>
         <option value="" disabled>
@@ -490,10 +525,15 @@ const RsvpForm: FC<{
         <option value="chu-re">Khách mời của Chú rể</option>
         <option value="co-dau">Khách mời của Cô dâu</option>
       </select>
-      {error && <div className="rsvp-error">{error}</div>}
       <button className="rsvp-submit" type="submit" disabled={sending}>
         {sending ? "ĐANG GỬI..." : "GỬI LỜI NHẮN & XÁC NHẬN"}
       </button>
+      {error && (
+        <div className="rsvp-error" role="alert">
+          <p className="rsvp-error-message">{error}</p>
+          {errorDetails && <pre className="rsvp-error-detail">{errorDetails}</pre>}
+        </div>
+      )}
     </form>
   );
 };

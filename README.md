@@ -68,14 +68,14 @@ npm start
 
 Mặc định project gọi backend ở:
 
-- API: `http://localhost:3000/api`
-- WebSocket: `ws://localhost:3000/ws`
+- API: `https://wedding-server-02n8.onrender.com/api`
+- WebSocket: `wss://wedding-server-02n8.onrender.com/ws`
 
 Có thể ghi đè bằng biến môi trường (xem `.env.example`):
 
 ```bash
-NEXT_PUBLIC_API_URL=https://api.example.com/api
-NEXT_PUBLIC_WS_URL=wss://api.example.com/ws
+NEXT_PUBLIC_API_URL=https://wedding-server-02n8.onrender.com/api
+NEXT_PUBLIC_WS_URL=wss://wedding-server-02n8.onrender.com/ws
 ```
 
 ## Cache lời chúc
