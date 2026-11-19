@@ -69,7 +69,7 @@ async function sendMessageRequest<T>({
       status: 0,
       method,
       url,
-      requestBody,
+      requestBody, 
       responseBody: err instanceof Error ? err.message : String(err),
     });
   }
