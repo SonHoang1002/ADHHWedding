@@ -35,31 +35,41 @@ const PHOTO_DIR = "/photos";
 
 const IMAGES = {
   // Ảnh bìa sau khi mở thiệp
-  hero: `${PHOTO_DIR}/start_image_background.jpg`,
+  hero: `${PHOTO_DIR}/anh_dau_tien.jpg`,
   // Chú rể & Cô dâu
-  groom: `${PHOTO_DIR}/groom.jpg`,
-  bride: `${PHOTO_DIR}/bride.jpg`,
+  groom: `${PHOTO_DIR}/anh_chu_re.jpg`,
+  bride: `${PHOTO_DIR}/anh_co_dau.jpg`,
   // Ảnh cưới (dùng cho album, thẻ sự kiện, lời cảm ơn)
-  wedding: [
-    `${PHOTO_DIR}/IMG_20261016_210715.jpg`,
-    `${PHOTO_DIR}/IMG_20261016_210752.jpg`,
-    `${PHOTO_DIR}/IMG_20261016_210754.jpg`,
-    `${PHOTO_DIR}/IMG_20261016_210802.jpg`,
-    `${PHOTO_DIR}/IMG_20261016_210804.jpg`,
+  event: [
+    `${PHOTO_DIR}/anh_le_an_hoi.jpg`,
+    `${PHOTO_DIR}/anh_le_vu_quy.jpg`,
+    `${PHOTO_DIR}/anh_le_thanh_hon.jpg`,
+    `${PHOTO_DIR}/anh_tiec_cuoi.jpg`,
+    `${PHOTO_DIR}/anh_tiec_cuoi.jpg`,
   ],
   // Mã QR mừng cưới (đặt file vào public/photos, có thể đổi đuôi .png/.jpg tuỳ file thật)
   qr: {
     groom: `${PHOTO_DIR}/qr_groom.png`,
     bride: `${PHOTO_DIR}/qr_bride.png`,
   },
+  thanks: `${PHOTO_DIR}/anh_cam_on.jpg`,
 };
 
 // Album: 5 ảnh cưới + ảnh cô dâu, chú rể (tạm thời, có thể lặp)
-const GALLERY_IMAGES: string[] = [...IMAGES.wedding, IMAGES.bride, IMAGES.groom];
+// const GALLERY_IMAGES: string[] = [...IMAGES.wedding, IMAGES.bride, IMAGES.groom];
+const GALLERY_IMAGES: string[] = [
+    `${PHOTO_DIR}/anh_1.jpg`,
+    `${PHOTO_DIR}/anh_2.jpg`,
+    `${PHOTO_DIR}/anh_3.jpg`,
+    `${PHOTO_DIR}/anh_4.jpg`,
+    `${PHOTO_DIR}/anh_5.jpg`,
+    `${PHOTO_DIR}/anh_6.jpg`,
+
+];
 // Thẻ sự kiện: xoay vòng các ảnh cưới
-const EVENT_IMAGES: string[] = IMAGES.wedding;
+const EVENT_IMAGES: string[] = IMAGES.event;
 // Lời cảm ơn
-const THANKS_IMAGE: string = IMAGES.wedding[4];
+const THANKS_IMAGE: string = IMAGES.thanks;
 
 /* ============================================================
    TIỆN ÍCH

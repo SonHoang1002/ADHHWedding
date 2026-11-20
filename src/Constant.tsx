@@ -20,7 +20,7 @@ export const chuRe = {
   bo: "Phạm Huy Luật",
   me: "Dương Thị Hệ",
   queQuan: "Vĩnh Yên, Phú Thọ",
-  anh: "/groom.jpg",
+  anh: "/anh_chu_re.jpg",
 };
 
 export const coDau = {
@@ -29,7 +29,7 @@ export const coDau = {
   bo: "Nguyễn Trọng Hưng",
   me: "Đặng Thị Thuý Hằng",
   queQuan: "Lê Thanh Nghị, Hải Phòng",
-  anh: "/bride.jpg",
+  anh: "/anh_co_dau.jpg",
 };
 
 export const leAnHoi = {
@@ -138,7 +138,7 @@ export const danhSachSuKien: SuKienCard[] = [
     thoiGian: leAnHoi.thoiGian,
     diaDiem: leAnHoi.diaDiem,
     banDo: [diemNhaGai],
-    anh: "/couple.jpg",
+    anh: "/anh_le_an_hoi.jpg",
   },
   {
     id: "vu-quy",
@@ -148,7 +148,7 @@ export const danhSachSuKien: SuKienCard[] = [
     thoiGian: leVuQuy.thoiGian,
     diaDiem: leVuQuy.diaDiem,
     banDo: [diemNhaGai],
-    anh: "/couple.jpg",
+    anh: "/anh_le_vu_quy.jpg",
   },
   {
     id: "thanh-hon",
@@ -158,7 +158,7 @@ export const danhSachSuKien: SuKienCard[] = [
     thoiGian: leThanhHon.thoiGian,
     diaDiem: leThanhHon.diaDiem,
     banDo: [diemNhaTrai],
-    anh: "/couple.jpg",
+    anh: "/anh_le_thanh_hon.jpg",
   },
   {
     id: "tiec-cuoi-nha-gai",
@@ -168,7 +168,7 @@ export const danhSachSuKien: SuKienCard[] = [
     thoiGian: tiecCuoiNhaGai.thoiGian,
     diaDiem: tiecCuoiNhaGai.diaDiem,
     banDo: [diemWhitePalace],
-    anh: "/couple.jpg",
+    anh: "/anh_tiec_cuoi.jpg",
   },
   {
     id: "tiec-cuoi-nha-trai",
@@ -178,7 +178,7 @@ export const danhSachSuKien: SuKienCard[] = [
     thoiGian: tiecCuoiNhaTrai.thoiGian,
     diaDiem: tiecCuoiNhaTrai.diaDiem,
     banDo: [diemNhaTrai],
-    anh: "/couple.jpg",
+    anh: "/anh_tiec_cuoi.jpg",
   },
 ];
 
